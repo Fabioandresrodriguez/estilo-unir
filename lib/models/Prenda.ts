@@ -78,8 +78,8 @@ const PrendaSchema = new Schema<IPrendaDocument>({
     type: [String],
     required: [true, 'Debe subir al menos una imagen de la prenda.'],
     validate: {
-      validator: (val: string[]) => val && val.length > 0,
-      message: 'Debe haber al menos una imagen asociada.'
+      validator: (val: string[]) => val && val.length > 0 && val.length <= 4,
+      message: 'Debe subir entre 1 y 4 imágenes de la prenda.'
     }
   },
   estado: {

@@ -74,12 +74,20 @@ export default function RegistrarPrendaPage() {
 
   // Gestión de imágenes locales
   const handleAddImage = (file: File, previewUrl: string) => {
-    setImages(prev => [...prev, { file, previewUrl }]);
+    setImages(prev => {
+      const updated = [...prev, { file, previewUrl }];
+      setValue('imagenes', updated.map(img => img.previewUrl), { shouldValidate: true });
+      return updated;
+    });
     setUploadError(null);
   };
 
   const handleAddBlob = (blob: Blob, previewUrl: string) => {
-    setImages(prev => [...prev, { blob, previewUrl }]);
+    setImages(prev => {
+      const updated = [...prev, { blob, previewUrl }];
+      setValue('imagenes', updated.map(img => img.previewUrl), { shouldValidate: true });
+      return updated;
+    });
     setUploadError(null);
   };
 
@@ -89,6 +97,7 @@ export default function RegistrarPrendaPage() {
       // Revocar URL temporal para evitar fugas de memoria
       URL.revokeObjectURL(updated[index].previewUrl);
       updated.splice(index, 1);
+      setValue('imagenes', updated.map(img => img.previewUrl), { shouldValidate: true });
       return updated;
     });
   };
@@ -210,6 +219,9 @@ export default function RegistrarPrendaPage() {
               onRemoveImage={handleRemoveImage}
               onOpenCamera={() => setIsCameraOpen(true)}
             />
+            {errors.imagenes && (
+              <p className="text-[#FF0000] font-sans text-xs mt-1">{errors.imagenes.message}</p>
+            )}
           </div>
 
           {/* Panel Derecho: Inputs y Metadata */}

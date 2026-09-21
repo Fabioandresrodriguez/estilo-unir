@@ -14,12 +14,14 @@ export function CameraCapture({ onCapture, onClose }: CameraCaptureProps) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    let activeStream: MediaStream | null = null;
     async function startCamera() {
       try {
         const mediaStream = await navigator.mediaDevices.getUserMedia({
           video: { facingMode: 'environment' }, // Cámara trasera en móviles por defecto
           audio: false
         });
+        activeStream = mediaStream;
         setStream(mediaStream);
         if (videoRef.current) {
           videoRef.current.srcObject = mediaStream;
@@ -31,13 +33,22 @@ export function CameraCapture({ onCapture, onClose }: CameraCaptureProps) {
     }
     startCamera();
 
-    // Cleanup: Detener cámara al desmontar
-    return () => {
-      if (stream) {
-        stream.getTracks().forEach((track) => track.stop());
+    // Keyboard listener for Escape key to close the camera modal
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
       }
     };
-  }, []);
+    window.addEventListener('keydown', handleKeyDown);
+
+    // Cleanup: Detener cámara al desmontar y limpiar event listener
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      if (activeStream) {
+        activeStream.getTracks().forEach((track) => track.stop());
+      }
+    };
+  }, [onClose]);
 
   const capturePhoto = () => {
     if (videoRef.current) {

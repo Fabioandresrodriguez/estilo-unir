@@ -24,7 +24,8 @@ export const PrendaZodSchema = z.object({
     .max(80, 'El nombre no puede superar los 80 caracteres.')
     .trim(),
   imagenes: z.array(z.string().url('Cada imagen debe ser una URL válida.'))
-    .min(1, 'Debe subir al menos una imagen.'),
+    .min(1, 'Debe subir al menos una imagen.')
+    .max(4, 'Límite máximo de 4 fotografías alcanzado.'),
   estado: z.enum(estadosValidos),
   metadata: z.object({
     categoria: z.enum(categoriasValidas),
