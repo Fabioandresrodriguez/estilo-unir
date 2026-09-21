@@ -1,6 +1,20 @@
 import mongoose from 'mongoose';
 import Prenda from '../lib/models/Prenda';
 import { PrendaZodSchema } from '../lib/validations/prenda';
+import fs from 'fs';
+import path from 'path';
+
+// Simple .env parser to load MONGODB_URI
+const envPath = path.join(process.cwd(), '.env');
+if (fs.existsSync(envPath)) {
+  const envContent = fs.readFileSync(envPath, 'utf8');
+  for (const line of envContent.split('\n')) {
+    const match = line.match(/^\s*([^#\s=]+)\s*=\s*(.*)$/);
+    if (match) {
+      process.env[match[1]] = match[2].trim();
+    }
+  }
+}
 
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/closet_digital';
 
