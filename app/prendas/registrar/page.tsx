@@ -188,13 +188,7 @@ export default function RegistrarPrendaPage() {
         Registrar Prenda
       </h2>
 
-      {/* Alertas de Éxito o Error (Bordes gruesos de 3px, colores de estado puro) */}
-      {uploadError && (
-        <div className="border-[3px] border-[#FF0000] p-4 text-[#FF0000] bg-white font-mono text-sm mb-6 uppercase">
-          [ERROR]: {uploadError}
-        </div>
-      )}
-
+      {/* Alertas de Éxito (Bordes gruesos de 3px, colores de estado puro) */}
       {successMessage && (
         <div className="border-[3px] border-[#008000] p-4 text-[#008000] bg-white font-mono text-sm mb-6 uppercase">
           [ÉXITO]: {successMessage}
@@ -482,6 +476,13 @@ export default function RegistrarPrendaPage() {
 
           </div>
         </div>
+
+        {/* Alertas de Error (Bordes gruesos de 3px, colores de estado puro) */}
+        {(uploadError || Object.keys(errors).length > 0) && (
+          <div className="border-[3px] border-[#FF0000] p-4 text-[#FF0000] bg-white font-mono text-sm uppercase">
+            [ERROR]: {uploadError || 'Existen errores de validación en el formulario. Por favor, revíselos antes de guardar.'}
+          </div>
+        )}
 
         {/* Acciones del Formulario */}
         <div className="border-t-[3px] border-black pt-6 flex flex-col sm:flex-row gap-4 justify-end">
