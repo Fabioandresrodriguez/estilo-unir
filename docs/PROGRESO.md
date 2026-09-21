@@ -1,6 +1,6 @@
 # 📈 Estado de Progreso del Proyecto: Clóset Digital (MVP)
 
-Este documento resume el progreso actual del proyecto al finalizar la sesión de trabajo del **13 de junio de 2026**. Su propósito es servir como punto de partida y contexto inmediato para la siguiente sesión de desarrollo.
+Este documento resume el progreso actual del proyecto al finalizar la sesión de trabajo del **18 de junio de 2026**. Su propósito es servir como punto de partida y contexto inmediato para la siguiente sesión de desarrollo.
 
 ---
 
@@ -11,7 +11,7 @@ Este documento resume el progreso actual del proyecto al finalizar la sesión de
 | **Épica 0** | **Cimientos del Sistema y Catálogos** | | |
 | ➔ **[HU0](HU0_Investigacion_Catalogos.md)** | Investigación y Gestión de Catálogos | **Completado (100%)** | Modelos, esquemas, tipos, healthcheck API, y base de datos inicializada con 20 prendas. |
 | **Épica 1** | **Registro y Captura de Prendas** | | |
-| ➔ **[HU1](HU1_Registro_Prenda.md)** | Registro de Prenda con Foto y Metadata | *Pendiente* | Formulario de captura, carga de fotos, Server Actions de guardado. |
+| ➔ **[HU1](HU1_Registro_Prenda.md)** | Registro de Prenda con Foto y Metadata | **Completado (100%)** | Formulario de captura brutalista, soporte de cámara web/móvil, carga multi-foto (máx 4) y persistencia en MongoDB. |
 | **Épica 2** | **Visualización y Exploración** | | |
 | ➔ **[HU2](HU2_Vista_Galeria.md)** | Vista de Galería / Listado | *Pendiente* | Grid responsivo, filtros sincronizados con URL, indicadores de disponibilidad. |
 | ➔ **[HU3](HU3_Detalle_Prenda.md)** | Vista de Detalle de Prenda | *Pendiente* | Modal Dialog/Drawer, carrusel de imágenes, badges de metadatos. |
@@ -22,44 +22,35 @@ Este documento resume el progreso actual del proyecto al finalizar la sesión de
 
 ## 🛠️ Tareas Completadas en la Sesión
 
-### 1. Documentación de Especificación y Diseño
-- Se definieron y estructuraron a detalle máximo las 5 Historias de Usuario (HU0 a HU4) en formato Markdown dentro del directorio `/docs/`.
-- Se creó una carpeta dedicada a diagramas de sistema en **[docs/diagrams/](diagrams/README.md)** con los siguientes entregables en Mermaid:
-  - **[Modelo de Datos (E-R Enriquecido)](diagrams/modelo_datos.md)**.
-  - **[Máquina de Transición de Estados](diagrams/transicion_estados.md)**.
-  - **[Flujo de Navegación y Arquitectura (Sitemap)](diagrams/flujo_navegacion.md)**.
+### 1. Sistema de Estilos y Tipografías (RawBlock Design System - DESING.md)
+- **Fuentes de Google:** Se cargaron las tipografías especificadas (`Archivo Black` para encabezados, `Work Sans` para cuerpo de texto y `Space Mono` para entradas de código y formularios) mediante `next/font/google` en [app/layout.tsx](file:///root/code/estilo/app/layout.tsx).
+- **Base CSS-first:** Se reconfiguró [app/globals.css](file:///root/code/estilo/app/globals.css) para anular todas las esquinas redondeadas (`border-radius: 0px !important;`) y establecer la paleta brutalista de colores en blanco y negro puros, éxito (verde puro), advertencia (naranja puro) y error (rojo puro).
+- **Componente de Botón:** Se personalizó [components/ui/button.tsx](file:///root/code/estilo/components/ui/button.tsx) para alinearse al sistema RawBlock, implementando botones cuadrados de bordes gruesos (3px a 5px en active) con texto en mayúsculas, tracking espaciado e inversión total de color en hover.
 
-### 2. Infraestructura y Base de Datos (HU0)
-- **Modelado de Datos:** Se crearon las interfaces de TypeScript en **[types/prenda.ts](file:///root/code/estilo/types/prenda.ts)** y el modelo Mongoose en **[lib/models/Prenda.ts](file:///root/code/estilo/lib/models/Prenda.ts)**, implementando una regla de validación jerárquica estricta para subcategorías.
-- **Validación de Capa de Aplicación:** Se creó el esquema Zod en **[lib/validations/prenda.ts](file:///root/code/estilo/lib/validations/prenda.ts)**.
-- **Conectividad:** Se creó el módulo de conexión robusta en **[lib/db.ts](file:///root/code/estilo/lib/db.ts)** con gestión de caché para Next.js.
-- **Healthcheck:** Se implementó el endpoint API en **[app/api/db-check/route.ts](file:///root/code/estilo/app/api/db-check/route.ts)** para validar el estado de conexión de la base de datos de manera externa.
-- **Inicialización (Seeding):** Se escribió e implementó el script de datos simulados en **[scripts/seed.ts](file:///root/code/estilo/scripts/seed.ts)**.
-- **Configuración de Entorno:** Se creó el archivo **[.env](file:///root/code/estilo/.env)** para almacenar de forma segura la URI de MongoDB.
-
-### 3. Ejecución del Seed
-- Se configuró la variable de entorno `MONGODB_URI` en el archivo `.env` del proyecto.
-- Se ejecutó el script de seed cargando la configuración de forma nativa en Node.js v24:
-  ```bash
-  npx -y tsx --env-file=.env scripts/seed.ts
-  ```
-- Se verificó la correcta carga de datos conectando directamente a la base de datos, retornando la existencia de **20 prendas de prueba insertadas exitosamente**.
+### 2. Implementación de Captura y Registro de Prenda (HU1)
+- **Endpoint de Subida de Imágenes:** Se creó la ruta de API [app/api/upload/route.ts](file:///root/code/estilo/app/api/upload/route.ts) para procesar, validar (máx 5MB, JPG/PNG/WEBP) y almacenar archivos locales en la carpeta `public/uploads/` del servidor, retornando URLs estáticas.
+- **Server Action:** Se creó la función del lado del servidor `createPrendaAction` en [app/actions/prenda-actions.ts](file:///root/code/estilo/app/actions/prenda-actions.ts) para validar el esquema Zod del inventario e insertarlo de forma atómica en MongoDB.
+- **Componente de Streaming de Cámara:** Se implementó [components/prendas/CameraCapture.tsx](file:///root/code/estilo/components/prendas/CameraCapture.tsx) para conectarse a cámaras traseras de dispositivos mediante `navigator.mediaDevices.getUserMedia` y tomar fotos instantáneas.
+- **Componente de Carga de Archivos:** Se creó [components/prendas/MultiImageUpload.tsx](file:///root/code/estilo/components/prendas/MultiImageUpload.tsx) para previsualizar hasta 4 imágenes, permitiendo remover ítems individuales.
+- **Formulario y Vista de Registro:** Se desarrolló la página [app/prendas/registrar/page.tsx](file:///root/code/estilo/app/prendas/registrar/page.tsx) con soporte responsivo y adaptaciones brutalistas: selectores de color real con círculos cromáticos y accesibilidad optimizada mediante navegación por teclado y tags `aria`.
+- **Navegación Inicial:** Se rediseñó la página de inicio en [app/page.tsx](file:///root/code/estilo/app/page.tsx) bajo el sistema RawBlock para permitir al usuario ir al formulario de registro.
 
 ---
 
 ## 📋 Contexto y Notas Técnicas para la Siguiente Sesión
 
 * **Estado de compilación:** Todo el código TypeScript actual compila correctamente y no tiene errores de sintaxis o tipado (Validado con `npx tsc --noEmit`).
-- **Base de Datos:** MongoDB está activo y poblado con 20 documentos de prendas en diferentes estados (`Disponible`, `Sucio` y `Lavandería`).
-- **Servidor Local:** Para iniciar el servidor de desarrollo en la próxima sesión, se debe ejecutar:
+- **Base de Datos:** MongoDB está activo y poblado con 20 documentos de prendas del catálogo inicial + nuevas prendas que el usuario registre en el formulario.
+- **Servidor Local:** Para iniciar el servidor de desarrollo, se debe ejecutar:
   ```bash
   npm run dev
   ```
 
 ---
 
-## 🎯 Próximo Objetivo: Sprint 2 (Captura y Visualización)
-El primer paso en la siguiente sesión será iniciar el desarrollo de la **HU1 (Registro y Captura de Prenda)**:
-1. Crear el formulario visual de registro responsivo en `/prendas/registrar`.
-2. Implementar la captura mediante la cámara del móvil/web usando `navigator.mediaDevices.getUserMedia` o carga de archivos locales.
-3. Crear la Server Action para validar los datos mediante Zod e insertarlos en la colección de MongoDB transicionando al estado por defecto (`Disponible`).
+## 🎯 Próximo Objetivo: Sprint 2 (Galería y Filtros de Búsqueda)
+El primer paso en la siguiente sesión será iniciar el desarrollo de la **HU2 (Vista de Galería / Listado del Clóset Total)**:
+1. Reemplazar la página de inicio por una cuadrícula responsiva brutalista de prendas.
+2. Añadir filtros por URL SearchParams para Categoría, Estación, Estilo y Color.
+3. Aplicar opacidad reducida (`opacity-40` y desaturación) para las prendas en estado `Sucio` o `Lavandería`.
+

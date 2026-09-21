@@ -25,7 +25,7 @@ export const PrendaZodSchema = z.object({
     .trim(),
   imagenes: z.array(z.string().url('Cada imagen debe ser una URL válida.'))
     .min(1, 'Debe subir al menos una imagen.'),
-  estado: z.enum(estadosValidos).default('Disponible'),
+  estado: z.enum(estadosValidos),
   metadata: z.object({
     categoria: z.enum(categoriasValidas),
     subcategoria: z.string().min(1, 'La subcategoría es obligatoria.'),
