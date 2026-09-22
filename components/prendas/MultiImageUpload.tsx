@@ -97,7 +97,7 @@ export function MultiImageUpload({
               </button>
             </div>
             <span className="text-[10px] font-mono mt-3 text-gray-500">
-              MÁXIMO 4 FOTOS ({images.length}/4)
+              MÁXIMO 4 FOTOS (MÁX 10MB CADA UNA) ({images.length}/4)
             </span>
           </div>
         )}
