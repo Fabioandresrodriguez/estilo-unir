@@ -41,3 +41,57 @@ export async function createPrendaAction(prevState: any, data: any) {
     };
   }
 }
+
+export async function updatePrendaEstadoAction(prendaId: string, nuevoEstado: string) {
+  try {
+    // 1. Conexión a Base de Datos
+    await connectDB();
+
+    // 2. Validar que el estado sea correcto
+    const estadosValidos = ['Disponible', 'Sucio', 'Lavandería'];
+    if (!estadosValidos.includes(nuevoEstado)) {
+      return { success: false, message: 'Estado de prenda inválido.' };
+    }
+
+    // 3. Buscar y actualizar
+    const prendaActualizada = await Prenda.findByIdAndUpdate(
+      prendaId,
+      { estado: nuevoEstado },
+      { new: true, runValidators: true }
+    );
+
+    if (!prendaActualizada) {
+      return { success: false, message: 'La prenda no existe.' };
+    }
+
+    // 4. Invalidar la caché para refrescar la galería
+    revalidatePath('/');
+    
+    return { 
+      success: true, 
+      prenda: JSON.parse(JSON.stringify(prendaActualizada)),
+      message: 'Estado de disponibilidad actualizado.' 
+    };
+
+  } catch (error: any) {
+    console.error('Error en Server Action updatePrendaEstadoAction:', error);
+    return { success: false, message: 'Fallo al procesar la actualización en base de datos.' };
+  }
+}
+
+export async function getPrendaByIdAction(id: string) {
+  try {
+    await connectDB();
+    const prenda = await Prenda.findById(id).lean();
+    if (!prenda) {
+      return { success: false, message: 'La prenda no existe.' };
+    }
+    return { 
+      success: true, 
+      prenda: JSON.parse(JSON.stringify(prenda)) 
+    };
+  } catch (error: any) {
+    console.error('Error en Server Action getPrendaByIdAction:', error);
+    return { success: false, message: 'Error interno al consultar la prenda.' };
+  }
+}

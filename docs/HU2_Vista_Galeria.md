@@ -14,12 +14,12 @@
 ---
 
 ## 3. Criterios de Aceptación Funcionales
-- [ ] **Cuadrícula Responsiva:** Distribución automática de tarjetas de prendas adaptadas al ancho de pantalla del dispositivo.
-- [ ] **Filtros Avanzados Cruzados:** Posibilidad de filtrar de forma combinada por Categoría, Subcategoría, Colores, Clima/Estación, Estilo y Disponibilidad (Disponible, Sucio, Lavandería).
-- [ ] **Buscador de Texto Libre:** Filtro por coincidencia en el nombre de la prenda o en las notas del usuario.
-- [ ] **Tratamiento Visual de No Disponible:** Toda prenda en estado **Sucio** o **Lavandería** debe cambiar visualmente para denotar indisponibilidad (opacidad reducida, filtro de color e indicador textual).
-- [ ] **Ordenamiento:** Selección de orden por fecha de registro (más reciente/antiguo) o por nombre (A-Z, Z-A).
-- [ ] **Persistencia en URL (Deep Linking):** Todos los filtros y ordenamientos aplicados deben sincronizarse en la URL para permitir compartir o recargar la página manteniendo el mismo estado de búsqueda.
+- [x] **Cuadrícula Responsiva:** Distribución automática de tarjetas de prendas adaptadas al ancho de pantalla del dispositivo.
+- [x] **Filtros Avanzados Cruzados:** Posibilidad de filtrar de forma combinada por Categoría, Subcategoría, Colores, Clima/Estación, Estilo y Disponibilidad (Disponible, Sucio, Lavandería).
+- [x] **Buscador de Texto Libre:** Filtro por coincidencia en el nombre de la prenda o en las notas del usuario.
+- [x] **Tratamiento Visual de No Disponible:** Toda prenda en estado **Sucio** o **Lavandería** debe cambiar visualmente para denotar indisponibilidad (opacidad reducida, filtro de color e indicador textual).
+- [x] **Ordenamiento:** Selección de orden por fecha de registro (más reciente/antiguo) o por nombre (A-Z, Z-A).
+- [x] **Persistencia en URL (Deep Linking):** Todos los filtros y ordenamientos aplicados deben sincronizarse en la URL para permitir compartir o recargar la página manteniendo el mismo estado de búsqueda.
 
 ---
 

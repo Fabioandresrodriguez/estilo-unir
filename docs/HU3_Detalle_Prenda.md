@@ -14,11 +14,11 @@
 ---
 
 ## 3. Criterios de Aceptación Funcionales
-- [ ] **Presentación Adaptativa:** En pantallas móviles el detalle debe abrirse en un panel inferior deslizante (Drawer). En pantallas de escritorio se debe abrir en un cuadro de diálogo centrado (Dialog).
-- [ ] **Carrusel de Imágenes Multi-táctil:** Si la prenda tiene múltiples fotos, el usuario debe poder deslizar (swipe) entre ellas con soporte táctil nativo en móvil y controles de flechas en desktop.
-- [ ] **Desglose Estructurado de Metadata:** Todos los metadatos (categoría, subcategoría, talla, estaciones, estilo y colores) deben mostrarse visualmente organizados mediante Badges o Chips etiquetados.
-- [ ] **Interruptor Rápido de Disponibilidad:** La vista detallada debe incluir un control interactivo (Select o Botón Toggle) para cambiar el estado de la prenda inmediatamente a `Disponible`, `Sucio` o `Lavandería`.
-- [ ] **Persistencia y Actualización Reactiva:** Al actualizar el estado dentro del detalle, la base de datos debe reflejar el cambio, y la vista de la galería principal debe actualizarse en tiempo real de fondo (revalidación).
+- [x] **Presentación Adaptativa:** En pantallas móviles el detalle debe abrirse en un panel inferior deslizante (Drawer). En pantallas de escritorio se debe abrir en un cuadro de diálogo centrado (Dialog).
+- [x] **Carrusel de Imágenes Multi-táctil:** Si la prenda tiene múltiples fotos, el usuario debe poder deslizar (swipe) entre ellas con soporte táctil nativo en móvil y controles de flechas en desktop.
+- [x] **Desglose Estructurado de Metadata:** Todos los metadatos (categoría, subcategoría, talla, estaciones, estilo y colores) deben mostrarse visualmente organizados mediante Badges o Chips etiquetados.
+- [x] **Interruptor Rápido de Disponibilidad:** La vista detallada debe incluir un control interactivo (Select o Botón Toggle) para cambiar el estado de la prenda inmediatamente a `Disponible`, `Sucio` o `Lavandería`.
+- [x] **Persistencia y Actualización Reactiva:** Al actualizar el estado dentro del detalle, la base de datos debe reflejar el cambio, y la vista de la galería principal debe actualizarse en tiempo real de fondo (revalidación).
 
 ---
 
