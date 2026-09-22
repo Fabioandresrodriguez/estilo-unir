@@ -1,7 +1,7 @@
-# HU1.5: Compresión de Imágenes en Servidor y Ampliación de Límite de Carga
+# HU1.1: Compresión de Imágenes en Servidor y Ampliación de Límite de Carga
 
 ## 1. Identificador y Título
-* **ID:** HU1.5
+* **ID:** HU1.1
 * **Título:** Compresión de Imágenes en Servidor y Ampliación de Límite de Carga
 
 ---
