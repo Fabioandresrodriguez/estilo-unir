@@ -1,5 +1,10 @@
 import sharp from 'sharp';
 
+interface CompressionResult {
+  buffer: Buffer;
+  extension: string;
+}
+
 /**
  * Comprime una imagen del lado del servidor.
  * Redimensiona a un máximo de 2048px en su lado más largo para conservar calidad y optimizar espacio.
@@ -8,12 +13,19 @@ import sharp from 'sharp';
  * 
  * @param buffer Buffer de la imagen original.
  * @param mimeType Tipo MIME de la imagen (ej: 'image/jpeg', 'image/png', 'image/webp').
- * @returns Buffer de la imagen comprimida de un máximo de 3 MB.
+ * @returns Un objeto con el Buffer de la imagen comprimida y la extensión de archivo correspondiente.
  */
-export async function compressImage(buffer: Buffer, mimeType: string): Promise<Buffer> {
+export async function compressImage(buffer: Buffer, mimeType: string): Promise<CompressionResult> {
   let sharpImg = sharp(buffer);
   const metadata = await sharpImg.metadata();
   
+  let extension = 'jpg';
+  if (mimeType === 'image/webp') {
+    extension = 'webp';
+  } else if (mimeType === 'image/png') {
+    extension = 'png';
+  }
+
   // 1. Redimensionamiento adaptativo (max 2048px de lado)
   let width = metadata.width;
   let height = metadata.height;
@@ -53,13 +65,19 @@ export async function compressImage(buffer: Buffer, mimeType: string): Promise<B
       // Si un PNG es demasiado pesado y no se puede reducir bajo 3MB con PNG,
       // se fuerza la conversión a JPEG con calidad 70 para garantizar el tamaño.
       sharpImg = sharpImg.jpeg({ quality: 70, progressive: true });
+      extension = 'jpg';
     } else if (mimeType === 'image/webp') {
       sharpImg = sharpImg.webp({ quality: 60 });
+      extension = 'webp';
     } else {
       sharpImg = sharpImg.jpeg({ quality: 60, progressive: true });
+      extension = 'jpg';
     }
     outputBuffer = await sharpImg.toBuffer();
   }
 
-  return outputBuffer;
+  return {
+    buffer: outputBuffer,
+    extension
+  };
 }
