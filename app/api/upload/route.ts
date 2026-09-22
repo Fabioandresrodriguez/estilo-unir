@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
 import { existsSync } from 'fs';
+import { compressImage } from '@/lib/image-compress';
 
 export async function POST(req: NextRequest) {
   try {
@@ -31,22 +32,22 @@ export async function POST(req: NextRequest) {
         );
       }
 
-      // Validar tamaño (5MB máx)
-      const maxSize = 5 * 1024 * 1024;
+      // Validar tamaño (10MB máx)
+      const maxSize = 10 * 1024 * 1024;
       if (file.size > maxSize) {
         return NextResponse.json(
-          { error: 'El archivo excede el tamaño máximo permitido (5MB).' },
+          { error: 'El archivo excede el tamaño máximo permitido (10MB).' },
           { status: 400 }
         );
       }
 
+      // Escribir archivo en disco con compresión del lado del servidor
+      const fileBuffer = Buffer.from(await file.arrayBuffer());
+      const { buffer, extension } = await compressImage(fileBuffer, file.type);
+
       // Generar nombre de archivo único
-      const extension = file.name.split('.').pop() || 'jpg';
       const uniqueName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${extension}`;
       const filePath = join(uploadDir, uniqueName);
-
-      // Escribir archivo en disco
-      const buffer = Buffer.from(await file.arrayBuffer());
       await writeFile(filePath, buffer);
 
       // Registrar URL relativa accesible por el navegador
@@ -59,3 +60,4 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Error interno en el servidor al subir imágenes.' }, { status: 500 });
   }
 }
+
