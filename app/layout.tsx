@@ -1,6 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Archivo_Black, Work_Sans, Space_Mono } from "next/font/google";
 import "./globals.css";
+import { PwaInstallPrompt } from "@/components/pwa/PwaInstallPrompt";
 
 const archivoBlack = Archivo_Black({
   weight: "400",
@@ -22,6 +23,21 @@ const spaceMono = Space_Mono({
 export const metadata: Metadata = {
   title: "Clóset Digital",
   description: "Digitaliza tu guardarropa con estilo RawBlock Brutalista",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Clóset Digital",
+  },
+  formatDetection: {
+    telephone: false,
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#000000",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
 };
 
 export default function RootLayout({
@@ -33,8 +49,12 @@ export default function RootLayout({
     <html
       lang="es"
       className={`${archivoBlack.variable} ${workSans.variable} ${spaceMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col font-sans bg-white text-black">{children}</body>
+      <body className="min-h-full flex flex-col font-sans bg-white text-black" suppressHydrationWarning>
+        {children}
+        <PwaInstallPrompt />
+      </body>
     </html>
   );
 }

@@ -1,31 +1,31 @@
-import Link from 'next/link';
-import { Calendar, Accessibility, Sparkles, Camera } from 'lucide-react';
+import Link from "next/link";
+import { Calendar, DoorClosed, Sparkles, Camera } from "lucide-react";
 
 export function ShortcutsGrid() {
   const shortcuts = [
     {
-      label: 'Planificador',
+      label: "Planificador",
       icon: Calendar,
-      href: '/prendas/consola',
-      color: 'bg-[#F3F4F6]',
+      href: "/prendas/consola",
+      color: "bg-[#F3F4F6]",
     },
     {
-      label: 'Vestidor',
-      icon: Accessibility,
-      href: '/prendas/vestidor',
-      color: 'bg-[#F3F4F6]',
+      label: "Vestidor",
+      icon: DoorClosed,
+      href: "/prendas/vestidor",
+      color: "bg-[#F3F4F6]",
     },
     {
-      label: 'Prueba con IA',
+      label: "Prueba con IA",
       icon: Sparkles,
-      href: '#',
-      color: 'bg-[#F3F4F6]',
+      href: "#",
+      color: "bg-[#F3F4F6]",
     },
     {
-      label: 'Selfie',
+      label: "Calificame",
       icon: Camera,
-      href: '/prendas/registrar',
-      color: 'bg-[#F3F4F6]',
+      href: "/prendas/calificame",
+      color: "bg-[#F3F4F6]",
     },
   ];
 
@@ -35,7 +35,7 @@ export function ShortcutsGrid() {
         {shortcuts.map((shortcut, idx) => {
           const Icon = shortcut.icon;
           return (
-            <Link 
+            <Link
               key={idx}
               href={shortcut.href}
               className={`flex flex-col items-center justify-center p-4 border-[3px] border-black ${shortcut.color} transition-all active:translate-x-[3px] active:translate-y-[3px] active:shadow-none hover:-translate-x-[2px] hover:-translate-y-[2px] cursor-pointer text-black select-none group`}
