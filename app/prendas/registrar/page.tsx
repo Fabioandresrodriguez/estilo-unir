@@ -74,6 +74,11 @@ export default function RegistrarPrendaPage() {
 
   // Gestión de imágenes locales
   const handleAddImage = (file: File, previewUrl: string) => {
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    if (file.size > maxSize) {
+      setUploadError(`El archivo "${file.name}" excede el tamaño máximo permitido (10MB).`);
+      return;
+    }
     setImages(prev => {
       const updated = [...prev, { file, previewUrl }];
       setValue('imagenes', updated.map(img => img.previewUrl), { shouldValidate: true });
