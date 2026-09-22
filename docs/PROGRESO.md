@@ -14,7 +14,7 @@ Este documento resume el progreso actual del proyecto al finalizar la sesión de
 | ➔ **[HU1](HU1_Registro_Prenda.md)** | Registro de Prenda con Foto y Metadata | **Completado (100%)** | Formulario de captura brutalista, soporte de cámara web/móvil, carga multi-foto (máx 4) y persistencia en MongoDB. |
 | ➔ **[HU1.1](HU1_1_Compresion_Imagenes.md)** | Compresión en Servidor y Límite de Carga (10MB) | **Completado (100%)** | Ampliación a 10MB en cliente/servidor, compresión con Sharp (máx 3MB) y salvaguarda de tamaño. |
 | ➔ **[HU1.2](HU1_2_Almacenamiento_S3.md)** | Almacenamiento de Imágenes en AWS S3 | **Completado (100%)** | Integración con AWS SDK S3, generación de URLs absolutas y validación de esquema. |
-| ➔ **[HU1.3](HU1_3_Eliminacion_Fondo.md)** | Eliminación Automática de Fondo | *Pendiente* | Remoción local de fondo con @imgly/background-removal-node, salida transparente y compresión. |
+| ➔ **[HU1.3](HU1_3_Eliminacion_Fondo.md)** | Eliminación Automática de Fondo | **Completado (100%)** | Remoción local de fondo con @imgly/background-removal-node, salida transparente y compresión. |
 | **Épica 2** | **Visualización y Exploración** | | |
 | ➔ **[HU2](HU2_Vista_Galeria.md)** | Vista de Galería / Listado | *Pendiente* | Grid responsivo, filtros sincronizados con URL, indicadores de disponibilidad. |
 | ➔ **[HU3](HU3_Detalle_Prenda.md)** | Vista de Detalle de Prenda | *Pendiente* | Modal Dialog/Drawer, carrusel de imágenes, badges de metadatos. |
@@ -49,6 +49,11 @@ Este documento resume el progreso actual del proyecto al finalizar la sesión de
 - **Utilidad de Subida S3:** Se implementó [lib/s3-upload.ts](file:///root/code/estilo/lib/s3-upload.ts) para inicializar el cliente de AWS S3 y subir las imágenes al bucket configurado, organizándolas en una carpeta base `"estilos"` y subcarpetas segmentadas por la categoría de la prenda (ej. `estilos/superior/`).
 - **Endpoint de Subida Actualizado:** Se actualizó [app/api/upload/route.ts](file:///root/code/estilo/app/api/upload/route.ts) para recuperar la categoría de la prenda, comprimirla con Sharp y subirla a S3, retornando la URL absoluta que valida correctamente con Zod.
 - **Flujo de Formulario Integrado:** Se modificó [app/prendas/registrar/page.tsx](file:///root/code/estilo/app/prendas/registrar/page.tsx) para adjuntar la categoría seleccionada en el payload `FormData` enviado a la API de carga de imágenes.
+
+### 5. Eliminación Automática de Fondo (HU1.3)
+- **Model Segmentación IA:** Se instaló e integró la biblioteca `@imgly/background-removal-node` para realizar remoción local de fondo en Node.js usando modelos ONNX.
+- **Utilidad de Segmentación:** Se implementó [lib/background-removal.ts](file:///root/code/estilo/lib/background-removal.ts) para ejecutar el proceso y retornar buffers transparentes PNG con un mecanismo de try-catch de fallback (si el motor falla, continúa con la imagen original sin romper el flujo de carga).
+- **Pipeline de Imagen Integrado:** Se modificó [app/api/upload/route.ts](file:///root/code/estilo/app/api/upload/route.ts) para integrar la remoción de fondo antes de pasar el buffer a la compresión con Sharp, asegurando la preservación de la transparencia (canal Alpha) y subiendo el resultado final con su tipo MIME correcto a AWS S3.
 
 ---
 

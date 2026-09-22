@@ -6,15 +6,17 @@ import { removeBackground } from '@imgly/background-removal-node';
  * como fallback para no detener el flujo del usuario.
  * 
  * @param buffer Buffer de la imagen original.
+ * @param mimeType Tipo MIME de la imagen de entrada (ej: 'image/jpeg').
  * @returns Objeto con el Buffer transparente (o el original si falla) y el tipo MIME estimado.
  */
-export async function removeImageBackground(buffer: Buffer): Promise<{ buffer: Buffer; mimeType: string }> {
+export async function removeImageBackground(buffer: Buffer, mimeType: string): Promise<{ buffer: Buffer; mimeType: string }> {
   try {
-    console.log('Iniciando proceso de eliminación de fondo con @imgly/background-removal-node...');
+    console.log(`Iniciando proceso de eliminación de fondo con @imgly/background-removal-node (Tipo: ${mimeType})...`);
     const startTime = Date.now();
     
-    // removeBackground acepta buffers directamente y procesa localmente con ONNX
-    const resultBlob = await removeBackground(buffer);
+    // Convertimos el Buffer a un Blob con tipo MIME explícito para evitar problemas de formato no soportado
+    const inputBlob = new Blob([new Uint8Array(buffer)], { type: mimeType });
+    const resultBlob = await removeBackground(inputBlob);
     
     // Convertir el Blob de respuesta a un Buffer de Node.js
     const resultBuffer = Buffer.from(await resultBlob.arrayBuffer());

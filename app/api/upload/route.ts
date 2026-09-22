@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
       const fileBuffer = Buffer.from(await file.arrayBuffer());
 
       // 1. Eliminar fondo de la imagen
-      const { buffer: noBgBuffer, mimeType: noBgMimeType } = await removeImageBackground(fileBuffer);
+      const { buffer: noBgBuffer, mimeType: noBgMimeType } = await removeImageBackground(fileBuffer, file.type);
 
       // 2. Comprimir la imagen sin fondo (mantiene transparencia)
       const { buffer, extension } = await compressImage(noBgBuffer, noBgMimeType);
