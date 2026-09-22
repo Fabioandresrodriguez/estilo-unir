@@ -12,6 +12,7 @@ Este documento resume el progreso actual del proyecto al finalizar la sesión de
 | ➔ **[HU0](HU0_Investigacion_Catalogos.md)** | Investigación y Gestión de Catálogos | **Completado (100%)** | Modelos, esquemas, tipos, healthcheck API, y base de datos inicializada con 20 prendas. |
 | **Épica 1** | **Registro y Captura de Prendas** | | |
 | ➔ **[HU1](HU1_Registro_Prenda.md)** | Registro de Prenda con Foto y Metadata | **Completado (100%)** | Formulario de captura brutalista, soporte de cámara web/móvil, carga multi-foto (máx 4) y persistencia en MongoDB. |
+| ➔ **[HU1.5](HU1_5_Compresion_Imagenes.md)** | Compresión en Servidor y Límite de Carga (10MB) | **Completado (100%)** | Ampliación a 10MB en cliente/servidor, compresión con Sharp (máx 3MB) y salvaguarda de tamaño. |
 | **Épica 2** | **Visualización y Exploración** | | |
 | ➔ **[HU2](HU2_Vista_Galeria.md)** | Vista de Galería / Listado | *Pendiente* | Grid responsivo, filtros sincronizados con URL, indicadores de disponibilidad. |
 | ➔ **[HU3](HU3_Detalle_Prenda.md)** | Vista de Detalle de Prenda | *Pendiente* | Modal Dialog/Drawer, carrusel de imágenes, badges de metadatos. |
@@ -34,6 +35,12 @@ Este documento resume el progreso actual del proyecto al finalizar la sesión de
 - **Componente de Carga de Archivos:** Se creó [components/prendas/MultiImageUpload.tsx](file:///root/code/estilo/components/prendas/MultiImageUpload.tsx) para previsualizar hasta 4 imágenes, permitiendo remover ítems individuales.
 - **Formulario y Vista de Registro:** Se desarrolló la página [app/prendas/registrar/page.tsx](file:///root/code/estilo/app/prendas/registrar/page.tsx) con soporte responsivo y adaptaciones brutalistas: selectores de color real con círculos cromáticos y accesibilidad optimizada mediante navegación por teclado y tags `aria`.
 - **Navegación Inicial:** Se rediseñó la página de inicio en [app/page.tsx](file:///root/code/estilo/app/page.tsx) bajo el sistema RawBlock para permitir al usuario ir al formulario de registro.
+
+### 3. Compresión en Servidor y Límite de Carga (HU1.5)
+- **Biblioteca Sharp:** Se instaló e integró la biblioteca de procesamiento de imágenes `sharp`.
+- **Utilidad de Compresión:** Se implementó [lib/image-compress.ts](file:///root/code/estilo/lib/image-compress.ts) para redimensionar imágenes (máx 2048px en lado más largo), comprimir con calidad inicial de 80% según el formato, y salvaguardar que el archivo de salida pese un máximo de 3 MB (con re-compresión agresiva o conversión a JPEG si es necesario).
+- **Ampliación de Límite en Servidor:** Se actualizó [app/api/upload/route.ts](file:///root/code/estilo/app/api/upload/route.ts) para permitir archivos de hasta 10 MB e integrar el flujo de compresión.
+- **Validación e Información en Interfaz:** Se añadió validación de tamaño (hasta 10 MB) en el formulario cliente de [app/prendas/registrar/page.tsx](file:///root/code/estilo/app/prendas/registrar/page.tsx) y se actualizó la etiqueta visual informativa en [components/prendas/MultiImageUpload.tsx](file:///root/code/estilo/components/prendas/MultiImageUpload.tsx) a "MÁX 10MB CADA UNA".
 
 ---
 
