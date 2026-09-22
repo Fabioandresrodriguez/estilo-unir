@@ -16,9 +16,9 @@ export function ShortcutsGrid() {
       color: "bg-[#F3F4F6]",
     },
     {
-      label: "Prueba con IA",
+      label: "Que me pongo hoy?",
       icon: Sparkles,
-      href: "#",
+      href: "/prendas/recomendacion-hoy",
       color: "bg-[#F3F4F6]",
     },
     {

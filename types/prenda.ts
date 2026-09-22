@@ -23,6 +23,11 @@ export type EstacionClima = 'Primavera' | 'Verano' | 'Otoño' | 'Invierno' | 'To
 
 export type EstiloPrenda = 'Casual' | 'Formal' | 'Deportivo' | 'Streetwear' | 'Oficina' | 'Fiesta';
 
+export type ImpermeabilidadPrenda = 'Sin Proteccion' | 'Repelente' | 'Impermeable';
+export type CapaPosicionPrenda = 'Interior' | 'Media' | 'Exterior' | 'Única';
+export type RolCapsulaPrenda = 'Esencial Neutro' | 'Pieza de Acento' | 'Declaración';
+export type OcasionPrenda = 'Trabajo' | 'Deporte' | 'Social' | 'Formal' | 'Hogar' | 'Playa';
+
 export interface IMetadataPrenda {
   categoria: CategoriaPrenda;
   subcategoria: SubcategoriaPrenda;
@@ -31,6 +36,12 @@ export interface IMetadataPrenda {
   estilo: EstiloPrenda[];
   talla: string;
   notas?: string;
+  climaClo?: number | null;
+  impermeabilidad?: ImpermeabilidadPrenda | null;
+  capaPosicion?: CapaPosicionPrenda | null;
+  rolCapsula?: RolCapsulaPrenda | null;
+  ocasiones?: OcasionPrenda[] | null;
+  texturaMaterial?: string | null;
 }
 
 export interface IPrenda {
@@ -42,3 +53,4 @@ export interface IPrenda {
   createdAt?: Date;
   updatedAt?: Date;
 }
+

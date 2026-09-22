@@ -36,11 +36,58 @@ const validGarmentData = {
 async function testZodValidation() {
   console.log('\n--- Probando Validación Zod (Frontend/Action) ---');
   
-  // Caso Válido
+  // Caso Válido (Escenario 1: Registro manual minimalista, sin metadatos extendidos)
   const validParse = PrendaZodSchema.safeParse(validGarmentData);
-  console.log(`✅ Registro Válido Zod: ${validParse.success ? 'PASÓ' : 'FALLÓ'}`);
+  console.log(`✅ Registro Válido Zod (Sin metadatos extendidos - Escenario 1): ${validParse.success ? 'PASÓ' : 'FALLÓ'}`);
   if (!validParse.success) {
     console.error(validParse.error.flatten());
+  }
+
+  // Caso Válido con Metadatos Extendidos (Escenario 2: Registro enriquecido con IA)
+  const extendedGarmentData = {
+    ...validGarmentData,
+    metadata: {
+      ...validGarmentData.metadata,
+      climaClo: 1.2,
+      impermeabilidad: 'Repelente',
+      capaPosicion: 'Media',
+      rolCapsula: 'Pieza de Acento',
+      ocasiones: ['Trabajo', 'Social'],
+      texturaMaterial: 'Suave y acolchado'
+    }
+  };
+  const extendedParse = PrendaZodSchema.safeParse(extendedGarmentData);
+  console.log(`✅ Registro Válido Zod con Metadatos Extendidos (Escenario 2): ${extendedParse.success ? 'PASÓ' : 'FALLÓ'}`);
+  if (!extendedParse.success) {
+    console.error(extendedParse.error.flatten());
+  }
+
+  // Caso Inválido: climaClo tipo incorrecto (Escenario 3)
+  const invalidCloType = {
+    ...validGarmentData,
+    metadata: {
+      ...validGarmentData.metadata,
+      climaClo: 'fresco' // Debería ser un número
+    }
+  };
+  const parseCloType = PrendaZodSchema.safeParse(invalidCloType);
+  console.log(`❌ Validación Zod climaClo tipo incorrecto: ${!parseCloType.success ? 'PASÓ (Falló correctamente)' : 'FALLÓ (Permitió guardar)'}`);
+  if (!parseCloType.success) {
+    console.log(`   Mensaje de error: ${JSON.stringify(parseCloType.error.flatten().fieldErrors['metadata'])}`);
+  }
+
+  // Caso Inválido: climaClo fuera de rango (Escenario 3)
+  const invalidCloRange = {
+    ...validGarmentData,
+    metadata: {
+      ...validGarmentData.metadata,
+      climaClo: 2.5 // Máximo es 2.0
+    }
+  };
+  const parseCloRange = PrendaZodSchema.safeParse(invalidCloRange);
+  console.log(`❌ Validación Zod climaClo fuera de rango: ${!parseCloRange.success ? 'PASÓ (Falló correctamente)' : 'FALLÓ (Permitió guardar)'}`);
+  if (!parseCloRange.success) {
+    console.log(`   Mensaje de error: ${JSON.stringify(parseCloRange.error.flatten().fieldErrors['metadata'])}`);
   }
 
   // Caso Inválido: Nombre muy corto
@@ -98,10 +145,42 @@ async function testDatabaseValidation() {
     await mongoose.connect(MONGODB_URI);
     console.log('🔌 Conectado a la base de datos.');
 
-    // Intentar guardar prenda válida (usando un id temporal que luego borraremos)
+    // Intentar guardar prenda válida sin metadatos extendidos (Escenario 1)
     const validPrenda = new Prenda(validGarmentData);
     await validPrenda.validate();
-    console.log('✅ Validación Mongoose para datos válidos: PASÓ');
+    console.log('✅ Validación Mongoose para datos válidos (Escenario 1): PASÓ');
+
+    // Intentar guardar prenda válida con metadatos extendidos (Escenario 2)
+    const extendedGarmentData = {
+      ...validGarmentData,
+      metadata: {
+        ...validGarmentData.metadata,
+        climaClo: 1.2,
+        impermeabilidad: 'Repelente',
+        capaPosicion: 'Media',
+        rolCapsula: 'Pieza de Acento',
+        ocasiones: ['Trabajo', 'Social'],
+        texturaMaterial: 'Suave y acolchado'
+      }
+    };
+    const extendedPrenda = new Prenda(extendedGarmentData);
+    await extendedPrenda.validate();
+    console.log('✅ Validación Mongoose para datos extendidos válidos (Escenario 2): PASÓ');
+
+    // Intentar guardar con climaClo fuera de rango en la BD (Escenario 3)
+    const invalidCloPrenda = new Prenda({
+      ...validGarmentData,
+      metadata: {
+        ...validGarmentData.metadata,
+        climaClo: 2.5
+      }
+    });
+    try {
+      await invalidCloPrenda.validate();
+      console.log('❌ Validación Mongoose climaClo fuera de rango: FALLÓ (No arrojó error)');
+    } catch (err: any) {
+      console.log(`✅ Validación Mongoose climaClo fuera de rango: PASÓ (Falló correctamente: ${err.message})`);
+    }
 
     // Intentar guardar con más de 4 imágenes en la BD
     const invalidPrendaData = {

@@ -63,6 +63,49 @@ const MetadatosSchema = new Schema({
     required: false,
     trim: true,
     maxlength: [300, 'Las notas no pueden superar los 300 caracteres.']
+  },
+  climaClo: {
+    type: Number,
+    required: false,
+    min: [0.0, 'El valor de climaClo no puede ser menor a 0.0.'],
+    max: [2.0, 'El valor de climaClo no puede ser mayor a 2.0.']
+  },
+  impermeabilidad: {
+    type: String,
+    required: false,
+    enum: {
+      values: ['Sin Proteccion', 'Repelente', 'Impermeable'],
+      message: 'El valor de impermeabilidad no es válido.'
+    }
+  },
+  capaPosicion: {
+    type: String,
+    required: false,
+    enum: {
+      values: ['Interior', 'Media', 'Exterior', 'Única'],
+      message: 'La capa de posición no es válida.'
+    }
+  },
+  rolCapsula: {
+    type: String,
+    required: false,
+    enum: {
+      values: ['Esencial Neutro', 'Pieza de Acento', 'Declaración'],
+      message: 'El rol de cápsula no es válido.'
+    }
+  },
+  ocasiones: {
+    type: [String],
+    required: false,
+    enum: {
+      values: ['Trabajo', 'Deporte', 'Social', 'Formal', 'Hogar', 'Playa'],
+      message: 'Una o más ocasiones no son válidas.'
+    }
+  },
+  texturaMaterial: {
+    type: String,
+    required: false,
+    trim: true
   }
 }, { _id: false });
 
