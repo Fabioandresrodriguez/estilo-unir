@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { compressImage } from '@/lib/image-compress';
 import { uploadToS3 } from '@/lib/s3-upload';
+import { removeImageBackground } from '@/lib/background-removal';
 
 export async function POST(req: NextRequest) {
   try {
@@ -33,17 +34,24 @@ export async function POST(req: NextRequest) {
         );
       }
 
-      // Escribir buffer y comprimir del lado del servidor
       const fileBuffer = Buffer.from(await file.arrayBuffer());
-      const { buffer, extension } = await compressImage(fileBuffer, file.type);
+
+      // 1. Eliminar fondo de la imagen
+      const { buffer: noBgBuffer, mimeType: noBgMimeType } = await removeImageBackground(fileBuffer);
+
+      // 2. Comprimir la imagen sin fondo (mantiene transparencia)
+      const { buffer, extension } = await compressImage(noBgBuffer, noBgMimeType);
 
       // Limpiar nombre de archivo original
       const originalName = file.name || 'foto.jpg';
       const baseName = originalName.split('.').slice(0, -1).join('.') || 'foto';
       const cleanFileName = `${baseName}.${extension}`;
 
-      // Subir a AWS S3
-      const s3Url = await uploadToS3(buffer, cleanFileName, file.type, categoria);
+      // Determinar MIME type final según la extensión comprimida
+      const finalMimeType = extension === 'webp' ? 'image/webp' : (extension === 'png' ? 'image/png' : 'image/jpeg');
+
+      // 3. Subir a AWS S3
+      const s3Url = await uploadToS3(buffer, cleanFileName, finalMimeType, categoria);
       urls.push(s3Url);
     }
 
@@ -59,3 +67,4 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Error interno en el servidor al subir imágenes.' }, { status: 500 });
   }
 }
+
