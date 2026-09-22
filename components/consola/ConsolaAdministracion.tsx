@@ -2,6 +2,7 @@
 
 import React, { useOptimistic, useTransition, useState, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableHeader, TableRow, TableHead, TableCell } from '@/components/ui/table';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -76,8 +77,22 @@ export function ConsolaAdministracion({ prendasIniciales }: { prendasIniciales: 
     });
   };
 
-  const disponibles = optimisticPrendas.filter(p => p.estado === 'Disponible');
-  const fueraDeCirculacion = optimisticPrendas.filter(p => p.estado === 'Sucio' || p.estado === 'Lavandería');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCatFilter, setSelectedCatFilter] = useState<string | null>(null);
+
+  const totalPrendasCount = optimisticPrendas.length;
+  const disponiblesCount = optimisticPrendas.filter(p => p.estado === 'Disponible').length;
+  const suciasCount = optimisticPrendas.filter(p => p.estado === 'Sucio' || p.estado === 'Lavandería').length;
+
+  const filteredPrendas = optimisticPrendas.filter(prenda => {
+    const matchesSearch = prenda.nombre.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      (prenda.metadata?.notas && prenda.metadata.notas.toLowerCase().includes(searchQuery.toLowerCase()));
+    const matchesCategory = !selectedCatFilter || prenda.metadata?.categoria === selectedCatFilter;
+    return matchesSearch && matchesCategory;
+  });
+
+  const disponibles = filteredPrendas.filter(p => p.estado === 'Disponible');
+  const fueraDeCirculacion = filteredPrendas.filter(p => p.estado === 'Sucio' || p.estado === 'Lavandería');
 
   // Multi-select toggle helpers
   const handleSelectAll = (checked: boolean, list: IPrenda[]) => {
@@ -109,9 +124,92 @@ export function ConsolaAdministracion({ prendasIniciales }: { prendasIniciales: 
         </div>
       )}
 
+      {/* Profile Header & Stats Card */}
+      <div className="border-[5px] border-black bg-white p-6 flex flex-col gap-6 mb-6 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+        {/* User Info */}
+        <div className="flex items-center gap-4">
+          <div className="size-16 border-[4px] border-black bg-black text-white flex items-center justify-center font-heading text-3xl select-none shrink-0">
+            D
+          </div>
+          <div className="flex flex-col gap-0.5">
+            <h2 className="text-xl sm:text-2xl font-heading uppercase tracking-[0.5px] leading-none m-0 text-black">
+              DRAGO
+            </h2>
+            <span className="font-mono text-[9px] sm:text-[10px] uppercase tracking-[1.5px] text-gray-500">
+              [PROPIETARIO DEL CLÓSET DIGITAL]
+            </span>
+          </div>
+        </div>
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-3 gap-3 border-t-[3px] border-black pt-5">
+          <div className="border-[3px] border-black bg-[#F0F0F0] p-3 flex flex-col items-center justify-center text-center">
+            <span className="text-2xl sm:text-3xl font-heading leading-none text-black">
+              {totalPrendasCount}
+            </span>
+            <span className="font-mono text-[8px] sm:text-[9px] uppercase tracking-[0.5px] text-gray-500 mt-1.5 font-bold">
+              PRENDAS
+            </span>
+          </div>
+          <div className="border-[3px] border-black bg-[#F0F0F0] p-3 flex flex-col items-center justify-center text-center">
+            <span className="text-2xl sm:text-3xl font-heading leading-none text-[#008000]">
+              {disponiblesCount}
+            </span>
+            <span className="font-mono text-[8px] sm:text-[9px] uppercase tracking-[0.5px] text-gray-500 mt-1.5 font-bold">
+              LIMPIAS
+            </span>
+          </div>
+          <div className="border-[3px] border-black bg-[#F0F0F0] p-3 flex flex-col items-center justify-center text-center">
+            <span className="text-2xl sm:text-3xl font-heading leading-none text-[#FF0000]">
+              {suciasCount}
+            </span>
+            <span className="font-mono text-[8px] sm:text-[9px] uppercase tracking-[0.5px] text-gray-500 mt-1.5 font-bold">
+              SUCIAS
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Search and Filters Section */}
+      <div className="flex flex-col gap-3 border-[5px] border-black bg-white p-5 mb-6 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+        <label className="font-heading text-[12px] uppercase tracking-[1px] text-black">
+          Filtrar Prendas
+        </label>
+        <input
+          type="text"
+          placeholder="Buscar por nombre o notas..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="bg-[#F0F0F0] text-black border-[3px] border-black p-3 font-mono text-xs focus:border-[4px] focus:outline-none w-full"
+        />
+        <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-none snap-x mt-1">
+          <button
+            onClick={() => setSelectedCatFilter(null)}
+            className={cn(
+              "border-[2px] border-black px-3 py-1 font-mono uppercase text-[9px] tracking-[0.5px] cursor-pointer snap-start shrink-0 transition-colors",
+              !selectedCatFilter ? "bg-black text-white" : "bg-white text-black hover:bg-[#F0F0F0]"
+            )}
+          >
+            Todos
+          </button>
+          {['Superior', 'Inferior', 'Entero', 'Calzado', 'Accesorios'].map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setSelectedCatFilter(selectedCatFilter === cat ? null : cat)}
+              className={cn(
+                "border-[2px] border-black px-3 py-1 font-mono uppercase text-[9px] tracking-[0.5px] cursor-pointer snap-start shrink-0 transition-colors",
+                selectedCatFilter === cat ? "bg-black text-white" : "bg-white text-black hover:bg-[#F0F0F0]"
+              )}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Tabs list divider */}
       <Tabs defaultValue="disponibles" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 max-w-[500px] border-[3px] border-black p-1 bg-black gap-1 mb-8 h-[54px] rounded-none">
+        <TabsList className="grid w-full grid-cols-2 border-[3px] border-black p-1 bg-black gap-1 mb-6 h-[54px] rounded-none">
           <TabsTrigger 
             value="disponibles"
             className="rounded-none border-none py-2 font-heading text-[12px] sm:text-[14px] uppercase tracking-[1px] text-white data-active:bg-white data-active:text-black transition-all cursor-pointer"
@@ -129,50 +227,22 @@ export function ConsolaAdministracion({ prendasIniciales }: { prendasIniciales: 
         {/* Tab 1: Disponibles */}
         <TabsContent value="disponibles" className="animate-in fade-in duration-300 outline-none">
           
-          {/* Desktop Table View */}
-          <div className="hidden md:block border-[3px] border-black bg-white overflow-hidden">
-            <Table>
-              <TableHeader className="bg-[#F0F0F0] border-b-[3px] border-black">
-                <TableRow>
-                  <TableHead className="w-[50px] border-r-[3px] border-black text-center">
-                    <Checkbox 
-                      checked={isAllSelected(disponibles)}
-                      onCheckedChange={(checked) => handleSelectAll(!!checked, disponibles)}
-                      aria-label="Seleccionar todas las prendas disponibles"
-                    />
-                  </TableHead>
-                  <TableHead className="w-[80px] border-r-[3px] border-black">Mini</TableHead>
-                  <TableHead className="border-r-[3px] border-black font-heading text-[11px] uppercase tracking-[1px]">Prenda</TableHead>
-                  <TableHead className="border-r-[3px] border-black font-heading text-[11px] uppercase tracking-[1px]">Categoría</TableHead>
-                  <TableHead className="text-right font-heading text-[11px] uppercase tracking-[1px]">Acción Rápida</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {disponibles.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={5} className="text-center py-8 font-mono text-gray-500 uppercase text-[12px]">
-                      No hay prendas disponibles en este momento.
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  disponibles.map(prenda => (
-                    <ConsoleRow 
-                      key={prenda._id} 
-                      prenda={prenda} 
-                      isSelected={selectedIds.includes(prenda._id!)}
-                      onSelect={(checked) => {
-                        setSelectedIds(prev => checked ? [...prev, prenda._id!] : prev.filter(id => id !== prenda._id));
-                      }}
-                      onStatusChange={(id, estado) => handleBulkStatusChange([id], estado)}
-                    />
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </div>
+          {/* Select All Helper Bar */}
+          {disponibles.length > 0 && (
+            <div className="flex items-center gap-3 px-3 py-2 bg-[#F0F0F0] border-[3px] border-black mb-3">
+              <Checkbox 
+                checked={isAllSelected(disponibles)}
+                onCheckedChange={(checked) => handleSelectAll(!!checked, disponibles)}
+                id="select-all-disponibles"
+              />
+              <label htmlFor="select-all-disponibles" className="font-mono text-[10px] uppercase font-bold tracking-[1px] cursor-pointer">
+                Seleccionar Todas ({disponibles.length})
+              </label>
+            </div>
+          )}
 
-          {/* Mobile Card List View */}
-          <div className="flex flex-col gap-3 md:hidden">
+          {/* Unified Card List View */}
+          <div className="flex flex-col gap-3">
             {disponibles.length === 0 ? (
               <div className="text-center py-8 border-[3px] border-black bg-white font-mono text-gray-500 uppercase text-[11px]">
                 No hay prendas disponibles.
@@ -197,50 +267,22 @@ export function ConsolaAdministracion({ prendasIniciales }: { prendasIniciales: 
         {/* Tab 2: Ropa Sucia / Fuera de Circulación */}
         <TabsContent value="sucias" className="animate-in fade-in duration-300 outline-none">
           
-          {/* Desktop Table View */}
-          <div className="hidden md:block border-[3px] border-black bg-white overflow-hidden">
-            <Table>
-              <TableHeader className="bg-[#F0F0F0] border-b-[3px] border-black">
-                <TableRow>
-                  <TableHead className="w-[50px] border-r-[3px] border-black text-center">
-                    <Checkbox 
-                      checked={isAllSelected(fueraDeCirculacion)}
-                      onCheckedChange={(checked) => handleSelectAll(!!checked, fueraDeCirculacion)}
-                      aria-label="Seleccionar toda la ropa sucia"
-                    />
-                  </TableHead>
-                  <TableHead className="w-[80px] border-r-[3px] border-black">Mini</TableHead>
-                  <TableHead className="border-r-[3px] border-black font-heading text-[11px] uppercase tracking-[1px]">Prenda</TableHead>
-                  <TableHead className="border-r-[3px] border-black font-heading text-[11px] uppercase tracking-[1px]">Categoría</TableHead>
-                  <TableHead className="text-right font-heading text-[11px] uppercase tracking-[1px]">Acción Rápida</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {fueraDeCirculacion.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={5} className="text-center py-8 font-mono text-gray-500 uppercase text-[12px]">
-                      No hay prendas fuera de circulación (sucias o en lavandería).
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  fueraDeCirculacion.map(prenda => (
-                    <ConsoleRow 
-                      key={prenda._id} 
-                      prenda={prenda} 
-                      isSelected={selectedIds.includes(prenda._id!)}
-                      onSelect={(checked) => {
-                        setSelectedIds(prev => checked ? [...prev, prenda._id!] : prev.filter(id => id !== prenda._id));
-                      }}
-                      onStatusChange={(id, estado) => handleBulkStatusChange([id], estado)}
-                    />
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </div>
+          {/* Select All Helper Bar */}
+          {fueraDeCirculacion.length > 0 && (
+            <div className="flex items-center gap-3 px-3 py-2 bg-[#F0F0F0] border-[3px] border-black mb-3">
+              <Checkbox 
+                checked={isAllSelected(fueraDeCirculacion)}
+                onCheckedChange={(checked) => handleSelectAll(!!checked, fueraDeCirculacion)}
+                id="select-all-sucias"
+              />
+              <label htmlFor="select-all-sucias" className="font-mono text-[10px] uppercase font-bold tracking-[1px] cursor-pointer">
+                Seleccionar Todas ({fueraDeCirculacion.length})
+              </label>
+            </div>
+          )}
 
-          {/* Mobile Card List View */}
-          <div className="flex flex-col gap-3 md:hidden">
+          {/* Unified Card List View */}
+          <div className="flex flex-col gap-3">
             {fueraDeCirculacion.length === 0 ? (
               <div className="text-center py-8 border-[3px] border-black bg-white font-mono text-gray-500 uppercase text-[11px]">
                 No hay prendas fuera de circulación.
@@ -316,7 +358,10 @@ function MobileConsoleCard({
       </div>
 
       {/* Thumbnail */}
-      <div className="relative size-[60px] border-[2px] border-black bg-[#F5F5F5] overflow-hidden shrink-0">
+      <Link 
+        href={`/prendas/${prenda._id}`}
+        className="relative size-[60px] border-[2px] border-black bg-[#F5F5F5] overflow-hidden shrink-0 cursor-pointer block"
+      >
         <Image
           src={proxiedImage}
           alt={prenda.nombre}
@@ -325,10 +370,13 @@ function MobileConsoleCard({
           sizes="60px"
           className="object-cover"
         />
-      </div>
+      </Link>
 
       {/* Info details */}
-      <div className="flex-1 min-w-0 flex flex-col gap-1 select-none">
+      <Link 
+        href={`/prendas/${prenda._id}`}
+        className="flex-1 min-w-0 flex flex-col gap-1 select-none cursor-pointer hover:underline"
+      >
         <span className="font-sans font-bold uppercase text-[12px] text-black leading-tight truncate">
           {prenda.nombre}
         </span>
@@ -346,7 +394,7 @@ function MobileConsoleCard({
             {prenda.estado}
           </span>
         </div>
-      </div>
+      </Link>
 
       {/* Quick Action Button */}
       <div className="shrink-0">

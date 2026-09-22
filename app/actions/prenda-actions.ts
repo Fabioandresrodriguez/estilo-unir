@@ -122,3 +122,19 @@ export async function bulkUpdatePrendaEstadoAction(ids: string[], nuevoEstado: s
     return { success: false, message: 'Fallo al procesar la transacción en el servidor.' };
   }
 }
+
+export async function deletePrendaAction(id: string) {
+  try {
+    await connectDB();
+    const prendaEliminada = await Prenda.findByIdAndDelete(id);
+    if (!prendaEliminada) {
+      return { success: false, message: 'La prenda no existe.' };
+    }
+    revalidatePath('/');
+    return { success: true, message: 'Prenda eliminada con éxito del guardarropa.' };
+  } catch (error: any) {
+    console.error('Error en Server Action deletePrendaAction:', error);
+    return { success: false, message: 'Error interno en el servidor al eliminar la prenda.' };
+  }
+}
+

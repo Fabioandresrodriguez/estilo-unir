@@ -16,10 +16,12 @@ Este documento resume el progreso actual del proyecto al finalizar la sesión de
 | ➔ **[HU1.2](HU1_2_Almacenamiento_S3.md)** | Almacenamiento de Imágenes en AWS S3 | **Completado (100%)** | Integración con AWS SDK S3, generación de URLs absolutas y validación de esquema. |
 | ➔ **[HU1.3](HU1_3_Eliminacion_Fondo.md)** | Eliminación Automática de Fondo | **Completado (100%)** | Remoción local de fondo con @imgly/background-removal-node, salida transparente y compresión. |
 | **Épica 2** | **Visualización y Exploración** | | |
-| ➔ **[HU2](HU2_Vista_Galeria.md)** | Vista de Galería / Listado | *Pendiente* | Grid responsivo, filtros sincronizados con URL, indicadores de disponibilidad. |
-| ➔ **[HU3](HU3_Detalle_Prenda.md)** | Vista de Detalle de Prenda | *Pendiente* | Modal Dialog/Drawer, carrusel de imágenes, badges de metadatos. |
+| ➔ **[HU2](HU2_Vista_Galeria.md)** | Vista de Galería / Listado | **Completado (100%)** | Grid responsivo, filtros sincronizados con URL, indicadores de disponibilidad. |
+| ➔ **[HU3](HU3_Detalle_Prenda.md)** | Vista de Detalle de Prenda | **Completado (100%)** | Modal Dialog/Drawer, carrusel de imágenes, badges de metadatos. |
 | **Épica 3** | **Administración y Ciclo de Vida** | | |
-| ➔ **[HU4](HU4_Gestion_Disponibilidad.md)** | Gestión de Disponibilidad (Ropa Sucia) | *Pendiente* | Consola de administración, pestañas, selección masiva, Optimistic UI. |
+| ➔ **[HU4](HU4_Gestion_Disponibilidad.md)** | Gestión de Disponibilidad (Ropa Sucia) | **Completado (100%)** | Consola de administración, pestañas, selección masiva, Optimistic UI. |
+| **Épica 4** | **Rediseño e Interfaz Social** | | |
+| ➔ **[HU5](HU5_Interfaz_Principal.md)** | Interfaz Principal y Rediseño de UI/UX | *Pendiente* | Barra superior con IA, Carrusel de historias/OOTD, Estilista AI, Atajos y navegación fija. |
 
 ---
 

@@ -13,6 +13,8 @@ import { createPrendaAction } from '@/app/actions/prenda-actions';
 import { Button } from '@/components/ui/button';
 import { MultiImageUpload } from '@/components/prendas/MultiImageUpload';
 import { CameraCapture } from '@/components/prendas/CameraCapture';
+import { ArrowLeft } from 'lucide-react';
+import { BottomNav } from '@/components/social/BottomNav';
 
 // Mapeo de colores para la representación visual (HU0 y guía de diseño)
 const colorHexMap: Record<string, string> = {
@@ -176,57 +178,56 @@ export default function RegistrarPrendaPage() {
   };
 
   return (
-    <main className="flex-1 w-full max-w-5xl mx-auto p-4 sm:p-8 select-none">
-      {/* Botón Volver (Estilo Ghost Brutalista: transparent, black text, no border, underline, hover: text blue) */}
-      <div className="mb-6">
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          onClick={() => router.push('/')}
-          className="pl-0"
-        >
-          &lt; Volver al clóset
-        </Button>
-      </div>
-
-      {/* Título de la Página (Estilo Brutalista: Archivo Black, 48px, mayúsculas) */}
-      <h2 className="text-3xl sm:text-[48px] font-heading font-normal uppercase leading-none mb-8">
-        Registrar Prenda
-      </h2>
-
-      {/* Alertas de Éxito (Bordes gruesos de 3px, colores de estado puro) */}
-      {successMessage && (
-        <div className="border-[3px] border-[#008000] p-4 text-[#008000] bg-white font-mono text-sm mb-6 uppercase">
-          [ÉXITO]: {successMessage}
+    <div className="flex-1 w-full max-w-7xl mx-auto flex flex-col min-h-screen bg-[#F3F4F6] border-x-[5px] border-black pb-[64px]">
+      {/* Header Bar */}
+      <header className="sticky top-0 z-40 bg-white border-b-[5px] border-black flex items-center justify-between px-4 h-[64px] w-full shrink-0">
+        <div className="flex items-center gap-3">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={() => router.push('/')}
+            className="h-10 w-10 text-black hover:text-gray-600 transition-colors p-0 border-none bg-transparent hover:bg-transparent"
+            aria-label="Volver al clóset"
+          >
+            <ArrowLeft className="size-6 stroke-[2.5px]" />
+          </Button>
+          <span className="font-heading text-lg tracking-[1px] text-black select-none uppercase">
+            Agregar Prenda
+          </span>
         </div>
-      )}
+      </header>
 
-      {/* Contenedor del Formulario (Tarjeta Brutalista: white fill, 5px black border) */}
-      <form onSubmit={handleSubmit(onSubmit)} className="border-[5px] border-black bg-white p-6 sm:p-8 flex flex-col gap-8">
-        
-        {/* Layout de dos paneles (1 col en móvil, 2 cols en desktop) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      {/* Main Content Area */}
+      <main className="flex-1 flex flex-col bg-white p-4 sm:p-6 select-none overflow-y-auto">
+        <div className="max-w-xl mx-auto w-full flex flex-col gap-6">
           
-          {/* Panel Izquierdo: Multi-Foto Dropzone/Camera */}
-          <div className="flex flex-col gap-4">
-            <span className="text-black font-heading text-sm uppercase tracking-wider block">
-              FOTOGRAFÍAS DE LA PRENDA *
-            </span>
-            <MultiImageUpload 
-              images={images}
-              onAddImage={handleAddImage}
-              onAddBlob={handleAddBlob}
-              onRemoveImage={handleRemoveImage}
-              onOpenCamera={() => setIsCameraOpen(true)}
-            />
-            {errors.imagenes && (
-              <p className="text-[#FF0000] font-sans text-xs mt-1">{errors.imagenes.message}</p>
-            )}
-          </div>
+          {/* Alertas de Éxito (Bordes gruesos de 3px, colores de estado puro) */}
+          {successMessage && (
+            <div className="border-[3px] border-[#008000] p-4 text-[#008000] bg-white font-mono text-sm uppercase">
+              [ÉXITO]: {successMessage}
+            </div>
+          )}
 
-          {/* Panel Derecho: Inputs y Metadata */}
-          <div className="flex flex-col gap-6">
+          {/* Contenedor del Formulario (Tarjeta Brutalista: white fill, 5px black border) */}
+          <form onSubmit={handleSubmit(onSubmit)} className="border-[5px] border-black bg-white p-6 sm:p-8 flex flex-col gap-6">
             
+            {/* Foto Dropzone/Camera */}
+            <div className="flex flex-col gap-4">
+              <span className="text-black font-heading text-sm uppercase tracking-wider block">
+                FOTOGRAFÍAS DE LA PRENDA *
+              </span>
+              <MultiImageUpload 
+                images={images}
+                onAddImage={handleAddImage}
+                onAddBlob={handleAddBlob}
+                onRemoveImage={handleRemoveImage}
+                onOpenCamera={() => setIsCameraOpen(true)}
+              />
+              {errors.imagenes && (
+                <p className="text-[#FF0000] font-sans text-xs mt-1">{errors.imagenes.message}</p>
+              )}
+            </div>
+
             {/* Nombre */}
             <div>
               <label className="text-black font-heading text-sm uppercase tracking-wider mb-2 block">
@@ -249,63 +250,58 @@ export default function RegistrarPrendaPage() {
               )}
             </div>
 
-            {/* Fila: Categoría y Subcategoría */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              
-              {/* Categoría */}
-              <div>
-                <label className="text-black font-heading text-sm uppercase tracking-wider mb-2 block">
-                  Categoría *
-                </label>
-                <Controller
-                  name="metadata.categoria"
-                  control={control}
-                  render={({ field }) => (
-                    <select
-                      {...field}
-                      onChange={(e) => {
-                        field.onChange(e);
-                        // Resetear subcategoría al cambiar de categoría
-                        setValue('metadata.subcategoria', '');
-                      }}
-                      className="bg-[#F0F0F0] text-black border-[3px] border-black p-3 font-mono text-sm focus:border-[5px] focus:outline-none w-full cursor-pointer rounded-none"
-                    >
-                      <option value="Superior">Superior</option>
-                      <option value="Inferior">Inferior</option>
-                      <option value="Entero">Entero</option>
-                      <option value="Calzado">Calzado</option>
-                      <option value="Accesorios">Accesorios</option>
-                    </select>
-                  )}
-                />
-              </div>
-
-              {/* Subcategoría */}
-              <div>
-                <label className="text-black font-heading text-sm uppercase tracking-wider mb-2 block">
-                  Subcategoría *
-                </label>
-                <Controller
-                  name="metadata.subcategoria"
-                  control={control}
-                  render={({ field }) => (
-                    <select
-                      {...field}
-                      disabled={subcategoriasDisponibles.length === 0}
-                      className={`bg-[#F0F0F0] text-black border-[3px] ${errors.metadata?.subcategoria ? 'border-[#FF0000]' : 'border-black'} p-3 font-mono text-sm focus:border-[5px] focus:outline-none w-full cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed rounded-none`}
-                    >
-                      <option value="">Seleccione...</option>
-                      {subcategoriasDisponibles.map((subcat) => (
-                        <option key={subcat} value={subcat}>{subcat}</option>
-                      ))}
-                    </select>
-                  )}
-                />
-                {errors.metadata?.subcategoria && (
-                  <p className="text-[#FF0000] font-sans text-xs mt-1">{errors.metadata.subcategoria.message}</p>
+            {/* Categoría */}
+            <div>
+              <label className="text-black font-heading text-sm uppercase tracking-wider mb-2 block">
+                Categoría *
+              </label>
+              <Controller
+                name="metadata.categoria"
+                control={control}
+                render={({ field }) => (
+                  <select
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                      // Resetear subcategoría al cambiar de categoría
+                      setValue('metadata.subcategoria', '');
+                    }}
+                    className="bg-[#F0F0F0] text-black border-[3px] border-black p-3 font-mono text-sm focus:border-[5px] focus:outline-none w-full cursor-pointer rounded-none"
+                  >
+                    <option value="Superior">Superior</option>
+                    <option value="Inferior">Inferior</option>
+                    <option value="Entero">Entero</option>
+                    <option value="Calzado">Calzado</option>
+                    <option value="Accesorios">Accesorios</option>
+                  </select>
                 )}
-              </div>
+              />
+            </div>
 
+            {/* Subcategoría */}
+            <div>
+              <label className="text-black font-heading text-sm uppercase tracking-wider mb-2 block">
+                Subcategoría *
+              </label>
+              <Controller
+                name="metadata.subcategoria"
+                control={control}
+                render={({ field }) => (
+                  <select
+                    {...field}
+                    disabled={subcategoriasDisponibles.length === 0}
+                    className={`bg-[#F0F0F0] text-black border-[3px] ${errors.metadata?.subcategoria ? 'border-[#FF0000]' : 'border-black'} p-3 font-mono text-sm focus:border-[5px] focus:outline-none w-full cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed rounded-none`}
+                  >
+                    <option value="">Seleccione...</option>
+                    {subcategoriasDisponibles.map((subcat) => (
+                      <option key={subcat} value={subcat}>{subcat}</option>
+                    ))}
+                  </select>
+                )}
+              />
+              {errors.metadata?.subcategoria && (
+                <p className="text-[#FF0000] font-sans text-xs mt-1">{errors.metadata.subcategoria.message}</p>
+              )}
             </div>
 
             {/* Talla */}
@@ -330,7 +326,7 @@ export default function RegistrarPrendaPage() {
               )}
             </div>
 
-            {/* Colores (Representación Visual con Círculos Reales de Color + Estado Activo Brutalista) */}
+            {/* Colores */}
             <div>
               <label className="text-black font-heading text-sm uppercase tracking-wider mb-2 block">
                 Colores * (Selecciona uno o más)
@@ -378,7 +374,7 @@ export default function RegistrarPrendaPage() {
               )}
             </div>
 
-            {/* Estaciones (Chips de Filtro Activos) */}
+            {/* Estaciones */}
             <div>
               <label className="text-black font-heading text-sm uppercase tracking-wider mb-2 block">
                 Estación/Clima *
@@ -420,7 +416,7 @@ export default function RegistrarPrendaPage() {
               )}
             </div>
 
-            {/* Estilo (Chips de Filtro Activos) */}
+            {/* Estilo */}
             <div>
               <label className="text-black font-heading text-sm uppercase tracking-wider mb-2 block">
                 Estilo / Ocasión *
@@ -480,40 +476,39 @@ export default function RegistrarPrendaPage() {
               />
             </div>
 
-          </div>
+            {/* Alertas de Error */}
+            {(uploadError || Object.keys(errors).length > 0) && (
+              <div className="border-[3px] border-[#FF0000] p-4 text-[#FF0000] bg-white font-mono text-sm uppercase">
+                [ERROR]: {uploadError || 'Existen errores de validación en el formulario. Por favor, revíselos antes de guardar.'}
+              </div>
+            )}
+
+            {/* Acciones del Formulario */}
+            <div className="border-t-[3px] border-black pt-6 flex flex-col sm:flex-row gap-4 justify-end">
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => router.push('/')}
+                className="w-full sm:w-auto"
+                disabled={isPending}
+              >
+                Cancelar
+              </Button>
+              <Button
+                type="submit"
+                variant="default"
+                className="w-full sm:w-auto"
+                disabled={isPending}
+              >
+                {isPending ? 'Guardando...' : 'Guardar Prenda'}
+              </Button>
+            </div>
+
+          </form>
         </div>
+      </main>
 
-        {/* Alertas de Error (Bordes gruesos de 3px, colores de estado puro) */}
-        {(uploadError || Object.keys(errors).length > 0) && (
-          <div className="border-[3px] border-[#FF0000] p-4 text-[#FF0000] bg-white font-mono text-sm uppercase">
-            [ERROR]: {uploadError || 'Existen errores de validación en el formulario. Por favor, revíselos antes de guardar.'}
-          </div>
-        )}
-
-        {/* Acciones del Formulario */}
-        <div className="border-t-[3px] border-black pt-6 flex flex-col sm:flex-row gap-4 justify-end">
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={() => router.push('/')}
-            className="w-full sm:w-auto"
-            disabled={isPending}
-          >
-            Cancelar
-          </Button>
-          <Button
-            type="submit"
-            variant="default"
-            className="w-full sm:w-auto"
-            disabled={isPending}
-          >
-            {isPending ? 'Guardando...' : 'Guardar Prenda'}
-          </Button>
-        </div>
-
-      </form>
-
-      {/* Modal de Cámara (Streaming y Captura en Tiempo Real) */}
+      {/* Modal de Cámara */}
       {isCameraOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
           <div className="bg-white border-[5px] border-black p-6 w-full max-w-lg relative animate-in zoom-in-95 duration-200">
@@ -535,6 +530,10 @@ export default function RegistrarPrendaPage() {
           </div>
         </div>
       )}
-    </main>
+
+      {/* Navigation */}
+      <BottomNav />
+    </div>
   );
 }
+

@@ -1,232 +1,43 @@
-import Link from 'next/link';
-import { Suspense } from 'react';
-import { Button } from '@/components/ui/button';
-import { 
-  Sheet, 
-  SheetTrigger, 
-  SheetContent, 
-  SheetHeader, 
-  SheetTitle 
-} from '@/components/ui/sheet';
-import { FilterPanel } from '@/components/galeria/FilterPanel';
-import { PrendaCard } from '@/components/galeria/PrendaCard';
-import { EmptyState } from '@/components/galeria/EmptyState';
-import connectDB from '@/lib/db';
-import Prenda from '@/lib/models/Prenda';
-import { SlidersHorizontal } from 'lucide-react';
+import { HeaderBar } from '@/components/social/HeaderBar';
+import { StoriesCarousel } from '@/components/social/StoriesCarousel';
+import { AiStylist } from '@/components/social/AiStylist';
+import { ShortcutsGrid } from '@/components/social/ShortcutsGrid';
+import { RecentOutfits } from '@/components/social/RecentOutfits';
+import { BottomNav } from '@/components/social/BottomNav';
 
-export const unstable_instant = { 
-  prefetch: 'static',
-  unstable_disableValidation: true 
-};
-
-interface PageProps {
-  searchParams: Promise<{
-    categoria?: string;
-    subcategoria?: string;
-    colores?: string;
-    estaciones?: string;
-    estilos?: string;
-    estado?: string;
-    search?: string;
-    sort?: string;
-  }>;
-}
-
-export default async function Home({ searchParams }: PageProps) {
+export default function Home() {
   return (
-    <div className="flex-1 w-full max-w-7xl mx-auto p-4 sm:p-8 flex flex-col gap-8 min-h-screen">
+    <div className="flex-1 w-full max-w-7xl mx-auto flex flex-col min-h-screen bg-[#F3F4F6] border-x-[5px] border-black pb-[64px]">
+      {/* Header */}
+      <HeaderBar />
       
-      {/* Encabezado Principal (Tarjeta Brutalista: white fill, 5px black border) */}
-      <div className="border-[5px] border-black bg-white p-8 sm:p-12 flex flex-col gap-8">
+      {/* Main Content Area */}
+      <main className="flex-1 flex flex-col gap-6 bg-white">
+        {/* Stories Carousel */}
+        <StoriesCarousel />
         
-        {/* Encabezado */}
-        <div className="flex flex-col gap-4">
-          <h1 className="text-4xl sm:text-[64px] font-heading font-normal uppercase leading-none text-black">
-            Clóset Digital
-          </h1>
-          <p className="font-mono text-sm uppercase tracking-[1px] text-gray-500">
-            [SISTEMA DE DIGITALIZACIÓN Y OPERACIÓN DE GUARDARROPA]
-          </p>
+        {/* AI Stylist */}
+        <AiStylist />
+        
+        {/* Atajos */}
+        <ShortcutsGrid />
+        
+        {/* Recent Outfits */}
+        <RecentOutfits />
+
+        {/* Footer Técnico */}
+        <div className="mx-4 mt-8 mb-8 border-t-[3px] border-black pt-4 flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left">
+          <span className="font-mono text-[10px] text-gray-400">
+            PROYECTO: CLÓSET DIGITAL MVP // ESTILO: RAWBLOCK BRUTALISTA // ESTADO: HU5 IMPLEMENTADO
+          </span>
+          <span className="font-mono text-[10px] text-gray-400">
+            HECHO EN 2026 // NEXT.JS 16 & REACT 19
+          </span>
         </div>
+      </main>
 
-        {/* Descripción */}
-        <div className="border-t-[3px] border-black pt-6 flex flex-col gap-4">
-          <h4 className="text-xl font-bold font-sans">
-            Digitaliza tu ropa de forma ágil y lleva un control operativo de su disponibilidad en tiempo real.
-          </h4>
-          <p className="text-sm font-sans text-gray-700 leading-relaxed max-w-3xl">
-            RawBlock es un sistema brutalista diseñado para organizar prendas de vestir bajo clasificaciones enriquecidas. 
-            Permite la carga de fotos en tiempo real mediante la cámara integrada, registro jerárquico de catálogos y gestión operativa del estado de limpieza.
-          </p>
-        </div>
-
-        {/* Acciones */}
-        <div className="border-t-[3px] border-black pt-6 flex flex-col sm:flex-row gap-4">
-          <Button asChild variant="default" className="w-full sm:w-auto">
-            <Link href="/prendas/registrar">
-              Añadir Prenda [HU1]
-            </Link>
-          </Button>
-          
-          <Button asChild variant="secondary" className="w-full sm:w-auto">
-            <Link href="#galeria">
-              Ver Galería [HU2]
-            </Link>
-          </Button>
-
-          <Button asChild variant="secondary" className="w-full sm:w-auto">
-            <Link href="/prendas/consola">
-              Consola Disponibilidad [HU4]
-            </Link>
-          </Button>
-        </div>
-
-      </div>
-
-      {/* Galería Section */}
-      <div id="galeria" className="flex flex-col gap-6 scroll-mt-6">
-        <div className="border-[5px] border-black bg-black p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <h2 className="text-2xl sm:text-3xl font-heading font-normal text-white m-0 uppercase">
-            Mi Guardarropa
-          </h2>
-          
-          {/* Mobile Filter Sheet Trigger Button */}
-          <div className="lg:hidden w-full sm:w-auto">
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="secondary" className="w-full sm:w-auto flex items-center justify-center gap-2">
-                  <SlidersHorizontal className="size-4" />
-                  Filtrar y Ordenar
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-[85vw] max-w-md p-6 bg-white overflow-y-auto border-l-[5px] border-black">
-                <SheetHeader className="pb-4">
-                  <SheetTitle className="text-xl font-heading font-normal uppercase">Filtros y Orden</SheetTitle>
-                </SheetHeader>
-                <Suspense fallback={<div className="font-mono text-xs uppercase p-4">Cargando filtros...</div>}>
-                  <FilterPanel />
-                </Suspense>
-              </SheetContent>
-            </Sheet>
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-6 lg:flex-row items-start">
-          {/* Desktop Filter Sidebar */}
-          <aside className="hidden lg:block w-72 shrink-0 sticky top-4">
-            <Suspense fallback={<div className="font-mono text-xs uppercase p-4 border-[3px] border-black bg-white">Cargando filtros...</div>}>
-              <FilterPanel />
-            </Suspense>
-          </aside>
-          
-          {/* Main Grid View */}
-          <main className="flex-1 w-full">
-            <Suspense fallback={<PrendasSkeleton />}>
-              <PrendasGrid searchParams={searchParams} />
-            </Suspense>
-          </main>
-        </div>
-      </div>
-
-      {/* Footer Técnico */}
-      <div className="mt-8 mb-4 border-t-[3px] border-black pt-4 flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left">
-        <span className="font-mono text-[10px] text-gray-400">
-          PROYECTO: CLÓSET DIGITAL MVP // ESTILO: RAWBLOCK BRUTALISTA // ESTADO: HU0, HU1 & HU2 COMPLETADOS
-        </span>
-        <span className="font-mono text-[10px] text-gray-400">
-          HECHO EN 2026 // TECNOLOGÍA: NEXT.JS 16 & REACT 19
-        </span>
-      </div>
-
-    </div>
-  );
-}
-
-// Skeletons container for loading state
-function PrendasSkeleton() {
-  return (
-    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5">
-      {Array.from({ length: 10 }).map((_, idx) => (
-        <div key={idx} className="border-[3px] border-black bg-white flex flex-col">
-          <div className="relative aspect-[3/4] w-full bg-gray-200 animate-pulse border-b-[3px] border-black" />
-          <div className="p-3 flex flex-col gap-2">
-            <div className="h-4 bg-gray-200 animate-pulse w-3/4" />
-            <div className="flex gap-1">
-              <div className="h-3 bg-gray-200 animate-pulse w-10" />
-              <div className="h-3 bg-gray-200 animate-pulse w-10" />
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-// Server component to fetch filtered clothes
-async function PrendasGrid({ searchParams }: { searchParams: Promise<any> }) {
-  const params = await searchParams;
-  
-  // Construct MongoDB Query
-  const query: any = {};
-
-  if (params.categoria) {
-    query['metadata.categoria'] = params.categoria;
-  }
-  if (params.subcategoria) {
-    query['metadata.subcategoria'] = params.subcategoria;
-  }
-  if (params.colores) {
-    query['metadata.colores'] = { $in: params.colores.split(',') };
-  }
-  if (params.estaciones) {
-    query['metadata.estaciones'] = { $in: params.estaciones.split(',') };
-  }
-  if (params.estilos) {
-    query['metadata.estilo'] = { $in: params.estilos.split(',') };
-  }
-  if (params.estado) {
-    query.estado = params.estado;
-  }
-  if (params.search) {
-    query.$or = [
-      { nombre: { $regex: params.search, $options: 'i' } },
-      { 'metadata.notas': { $regex: params.search, $options: 'i' } }
-    ];
-  }
-
-  let sortOption: any = { createdAt: -1 };
-  if (params.sort === 'oldest') sortOption = { createdAt: 1 };
-  if (params.sort === 'name-asc') sortOption = { nombre: 1 };
-  if (params.sort === 'name-desc') sortOption = { nombre: -1 };
-
-  await connectDB();
-  const prendas = await Prenda.find(query).sort(sortOption).lean();
-
-  if (prendas.length === 0) {
-    return <EmptyState />;
-  }
-
-  const proxiedPrendas = JSON.parse(JSON.stringify(prendas)).map((prenda: any) => {
-    if (prenda.imagenes) {
-      prenda.imagenes = prenda.imagenes.map((img: string) => {
-        if (img && !img.startsWith('/') && !img.startsWith('data:')) {
-          return `/api/proxy-image?url=${encodeURIComponent(img)}`;
-        }
-        return img;
-      });
-    }
-    return prenda;
-  });
-
-  return (
-    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5">
-      {proxiedPrendas.map((prenda: any) => (
-        <PrendaCard 
-          key={prenda._id.toString()} 
-          prenda={prenda} 
-        />
-      ))}
+      {/* Fixed Navigation */}
+      <BottomNav />
     </div>
   );
 }

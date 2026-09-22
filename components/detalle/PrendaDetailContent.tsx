@@ -1,13 +1,14 @@
 'use client';
 
 import React, { useState, useEffect, useTransition } from 'react';
-import { getPrendaByIdAction, updatePrendaEstadoAction } from '@/app/actions/prenda-actions';
+import { useRouter } from 'next/navigation';
+import { getPrendaByIdAction, updatePrendaEstadoAction, deletePrendaAction } from '@/app/actions/prenda-actions';
 import { PrendaCarousel } from './PrendaCarousel';
 import { MetadataSection } from './MetadataSection';
 import { Badge } from '@/components/ui/badge';
 import { IPrenda, EstadoPrenda } from '@/types/prenda';
 import { cn } from '@/lib/utils';
-import { AlertCircle, CheckCircle2, Loader2, Sparkles } from 'lucide-react';
+import { AlertCircle, CheckCircle2, Loader2, Sparkles, Trash2 } from 'lucide-react';
 
 interface PrendaDetailContentProps {
   prendaId: string;
@@ -16,12 +17,34 @@ interface PrendaDetailContentProps {
 }
 
 export function PrendaDetailContent({ prendaId, onStatusChange, onClose }: PrendaDetailContentProps) {
+  const router = useRouter();
   const [prenda, setPrenda] = useState<IPrenda | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isUpdating, startUpdateTransition] = useTransition();
+  const [isDeleting, startDeleteTransition] = useTransition();
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [pulseState, setPulseState] = useState(false);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+
+  const handleDelete = () => {
+    if (!prenda) return;
+    setError(null);
+    startDeleteTransition(async () => {
+      const result = await deletePrendaAction(prenda._id!);
+      if (result.success) {
+        setToast({ message: result.message || 'Prenda eliminada con éxito', type: 'success' });
+        setTimeout(() => {
+          if (onClose) onClose();
+          router.push('/');
+          router.refresh();
+        }, 1500);
+      } else {
+        setError(result.message || 'Error al eliminar la prenda.');
+        setToast({ message: result.message || 'Error al eliminar la prenda.', type: 'error' });
+      }
+    });
+  };
 
   // Fetch garment details on load
   useEffect(() => {
@@ -218,6 +241,47 @@ export function PrendaDetailContent({ prendaId, onStatusChange, onClose }: Prend
 
           {/* Structured Metadata Badges */}
           <MetadataSection metadata={prenda.metadata} />
+
+          {/* Delete Action Section */}
+          <div className="mt-4 pt-4 border-t-[3px] border-black">
+            {!showConfirmDelete ? (
+              <button
+                type="button"
+                onClick={() => setShowConfirmDelete(true)}
+                className="w-full py-3 bg-[#FF0000] text-white border-[3px] border-black font-mono font-bold uppercase tracking-[1.5px] text-[13px] hover:bg-black hover:text-[#FF0000] transition-all active:bg-black active:text-white flex items-center justify-center gap-2 cursor-pointer shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"
+              >
+                <Trash2 className="size-4" />
+                Eliminar Prenda
+              </button>
+            ) : (
+              <div className="border-[3px] border-black p-4 bg-white flex flex-col gap-3 animate-in fade-in zoom-in-95 duration-200">
+                <span className="font-heading text-[12px] uppercase tracking-[1px] text-black">
+                  ¿Estás seguro de eliminar esta prenda permanentemente?
+                </span>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmDelete(false)}
+                    className="py-2.5 border-[2px] border-black text-[11px] font-mono font-bold uppercase tracking-[1px] bg-white text-black hover:bg-black hover:text-white transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none cursor-pointer"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleDelete}
+                    disabled={isDeleting}
+                    className="py-2.5 border-[2px] border-black text-[11px] font-mono font-bold uppercase tracking-[1px] bg-[#FF0000] text-white hover:bg-black hover:text-[#FF0000] transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+                  >
+                    {isDeleting ? (
+                      <Loader2 className="size-3.5 animate-spin" />
+                    ) : (
+                      <span>Confirmar</span>
+                    )}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Footer actions */}

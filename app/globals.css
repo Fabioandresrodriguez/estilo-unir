@@ -65,9 +65,12 @@
 }
 
 @layer base {
-  * {
+  *:not(.rounded-full):not(.rounded-circle) {
     border-color: var(--border);
     border-radius: 0px !important;
+  }
+  .rounded-full, .rounded-circle {
+    border-radius: 9999px !important;
   }
   body {
     background-color: var(--background);

@@ -1,8 +1,8 @@
 import React, { Suspense } from 'react';
 import Link from 'next/link';
 import { PrendaDetailContent } from '@/components/detalle/PrendaDetailContent';
-import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
+import { BottomNav } from '@/components/social/BottomNav';
 
 interface PageProps {
   params: Promise<{
@@ -12,24 +12,40 @@ interface PageProps {
 
 export default async function PrendaDetailPage({ params }: PageProps) {
   return (
-    <div className="flex-1 w-full max-w-5xl mx-auto p-4 sm:p-8 flex flex-col gap-6 min-h-screen">
+    <div className="flex-1 w-full max-w-7xl mx-auto flex flex-col min-h-screen bg-[#F3F4F6] border-x-[5px] border-black pb-[64px]">
       
-      {/* Return to gallery action header */}
-      <div className="flex justify-start">
-        <Button asChild variant="secondary">
-          <Link href="/" className="flex items-center gap-2">
-            <ArrowLeft className="size-4" />
-            Volver a la Galería
+      {/* Header Bar */}
+      <header className="sticky top-0 z-40 bg-white border-b-[5px] border-black flex items-center justify-between px-4 h-[64px] w-full shrink-0">
+        <div className="flex items-center gap-3">
+          <Link 
+            href="/" 
+            className="h-10 w-10 text-black hover:text-gray-600 transition-colors flex items-center justify-center"
+            aria-label="Volver al clóset"
+          >
+            <ArrowLeft className="size-6 stroke-[2.5px]" />
           </Link>
-        </Button>
-      </div>
+          <span className="font-heading text-lg tracking-[1px] text-black select-none uppercase">
+            Detalle de Prenda
+          </span>
+        </div>
+      </header>
 
-      {/* Detail card container */}
-      <div className="border-[5px] border-black bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
-        <Suspense fallback={<DetailLoadingPlaceholder />}>
-          <PrendaDetailLoader params={params} />
-        </Suspense>
-      </div>
+      {/* Main Content Area */}
+      <main className="flex-1 flex flex-col bg-white p-4 sm:p-6 select-none overflow-y-auto">
+        <div className="max-w-xl mx-auto w-full flex flex-col gap-6">
+          
+          {/* Detail card container */}
+          <div className="border-[5px] border-black bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
+            <Suspense fallback={<DetailLoadingPlaceholder />}>
+              <PrendaDetailLoader params={params} />
+            </Suspense>
+          </div>
+
+        </div>
+      </main>
+
+      {/* Navigation */}
+      <BottomNav />
 
     </div>
   );
@@ -57,3 +73,4 @@ function DetailLoadingPlaceholder() {
     </div>
   );
 }
+

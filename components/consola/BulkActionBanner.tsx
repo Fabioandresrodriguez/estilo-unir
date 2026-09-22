@@ -15,7 +15,7 @@ export function BulkActionBanner({
   onBulkAction 
 }: BulkActionBannerProps) {
   return (
-    <div className="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t-[5px] border-black p-4 shadow-[0_-8px_0px_0px_rgba(0,0,0,0.05)] select-none font-sans">
+    <div className="fixed bottom-[64px] left-1/2 -translate-x-1/2 w-full max-w-7xl z-40 bg-white/95 backdrop-blur-md border-t-[5px] border-x-[5px] border-black p-4 shadow-[0_-8px_0px_0px_rgba(0,0,0,0.05)] select-none font-sans">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         
         {/* Count Indicator */}
