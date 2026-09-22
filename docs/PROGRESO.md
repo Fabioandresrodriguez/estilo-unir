@@ -14,6 +14,7 @@ Este documento resume el progreso actual del proyecto al finalizar la sesión de
 | ➔ **[HU1](HU1_Registro_Prenda.md)** | Registro de Prenda con Foto y Metadata | **Completado (100%)** | Formulario de captura brutalista, soporte de cámara web/móvil, carga multi-foto (máx 4) y persistencia en MongoDB. |
 | ➔ **[HU1.1](HU1_1_Compresion_Imagenes.md)** | Compresión en Servidor y Límite de Carga (10MB) | **Completado (100%)** | Ampliación a 10MB en cliente/servidor, compresión con Sharp (máx 3MB) y salvaguarda de tamaño. |
 | ➔ **[HU1.2](HU1_2_Almacenamiento_S3.md)** | Almacenamiento de Imágenes en AWS S3 | **Completado (100%)** | Integración con AWS SDK S3, generación de URLs absolutas y validación de esquema. |
+| ➔ **[HU1.3](HU1_3_Eliminacion_Fondo.md)** | Eliminación Automática de Fondo | *Pendiente* | Remoción local de fondo con @imgly/background-removal-node, salida transparente y compresión. |
 | **Épica 2** | **Visualización y Exploración** | | |
 | ➔ **[HU2](HU2_Vista_Galeria.md)** | Vista de Galería / Listado | *Pendiente* | Grid responsivo, filtros sincronizados con URL, indicadores de disponibilidad. |
 | ➔ **[HU3](HU3_Detalle_Prenda.md)** | Vista de Detalle de Prenda | *Pendiente* | Modal Dialog/Drawer, carrusel de imágenes, badges de metadatos. |
