@@ -14,11 +14,11 @@
 ---
 
 ## 3. Criterios de Aceptación Funcionales
-- [ ] **Estructura en Dos Secciones:** Una pestaña con las prendas en estado `Disponible` (ropa activa) y otra pestaña que agrupe las prendas en estado `Sucio` o `Lavandería` (fuera de circulación).
-- [ ] **Selección Múltiple (Bulk Action):** Incorporar checkboxes por cada prenda para poder seleccionar de 1 a N prendas y realizar un cambio de estado masivo (ej. "Mandar a Lavandería" o "Marcar como Disponible").
-- [ ] **Acción Rápida Individual:** Botón directo en la fila de la prenda que cambie su estado de un clic sin necesidad de abrir su detalle completo.
-- [ ] **Transición de Estados Inmediata (Optimistic UI):** La prenda debe desaparecer de la pestaña actual y aparecer en la pestaña correspondiente de forma fluida y sin bloqueos de interfaz de usuario.
-- [ ] **Sincronización en Base de Datos:** Los cambios deben persistir de inmediato en la base de datos de MongoDB.
+- [x] **Estructura en Dos Secciones:** Una pestaña con las prendas en estado `Disponible` (ropa activa) y otra pestaña que agrupe las prendas en estado `Sucio` o `Lavandería` (fuera de circulación).
+- [x] **Selección Múltiple (Bulk Action):** Incorporar checkboxes por cada prenda para poder seleccionar de 1 a N prendas y realizar un cambio de estado masivo (ej. "Mandar a Lavandería" o "Marcar como Disponible").
+- [x] **Acción Rápida Individual:** Botón directo en la fila de la prenda que cambie su estado de un clic sin necesidad de abrir su detalle completo.
+- [x] **Transición de Estados Inmediata (Optimistic UI):** La prenda debe desaparecer de la pestaña actual y aparecer en la pestaña correspondiente de forma fluida y sin bloqueos de interfaz de usuario.
+- [x] **Sincronización en Base de Datos:** Los cambios deben persistir de inmediato en la base de datos de MongoDB.
 
 ---
 

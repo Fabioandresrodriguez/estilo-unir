@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
 
   try {
     // 1. Detect if it's an AWS S3 URL: https://[bucket].s3.[region].amazonaws.com/[key]
-    const s3UrlPattern = /^https:\/\/([^.]+)\.s3\.([^.]+)\.amazonaws\.com\/(.+)$/;
+    const s3UrlPattern = /^https:\/\/(.+)\.s3\.([^.]+)\.amazonaws\.com\/(.+)$/;
     const match = url.match(s3UrlPattern);
 
     if (match) {

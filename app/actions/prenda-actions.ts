@@ -95,3 +95,30 @@ export async function getPrendaByIdAction(id: string) {
     return { success: false, message: 'Error interno al consultar la prenda.' };
   }
 }
+
+export async function bulkUpdatePrendaEstadoAction(ids: string[], nuevoEstado: string) {
+  try {
+    if (!ids || ids.length === 0) {
+      return { success: false, message: 'No se seleccionaron prendas.' };
+    }
+
+    await connectDB();
+
+    const result = await Prenda.updateMany(
+      { _id: { $in: ids } },
+      { $set: { estado: nuevoEstado } }
+    );
+
+    revalidatePath('/');
+
+    return { 
+      success: true, 
+      modifiedCount: result.modifiedCount,
+      message: 'Actualización masiva persistida correctamente.' 
+    };
+
+  } catch (error: any) {
+    console.error('Error en Server Action bulkUpdatePrendaEstadoAction:', error);
+    return { success: false, message: 'Fallo al procesar la transacción en el servidor.' };
+  }
+}

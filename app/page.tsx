@@ -75,8 +75,10 @@ export default async function Home({ searchParams }: PageProps) {
             </Link>
           </Button>
 
-          <Button variant="secondary" className="w-full sm:w-auto cursor-not-allowed" disabled>
-            Consola Disponibilidad [HU4 - PENDIENTE]
+          <Button asChild variant="secondary" className="w-full sm:w-auto">
+            <Link href="/prendas/consola">
+              Consola Disponibilidad [HU4]
+            </Link>
           </Button>
         </div>
 
