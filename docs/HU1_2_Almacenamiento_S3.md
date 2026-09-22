@@ -15,10 +15,12 @@
 
 ## 3. Criterios de Aceptación Funcionales
 - [ ] **Almacenamiento en la Nube (Amazon S3):** Reemplazar la escritura local en `/public/uploads/` por la subida de los buffers de imágenes comprimidas (de la HU1.1) a un bucket de AWS S3.
-- [ ] **Retorno de URLs Absolutas:** El endpoint `/api/upload` debe retornar URLs absolutas válidas (ej: `https://[bucket-name].s3.[region].amazonaws.com/[unique-name].[extension]`).
+- [ ] **Estructura de Carpetas en S3 (Prefijo "estilos/"):** Las imágenes deben organizarse en S3 utilizando una ruta base llamada `"estilos"`, seguida de una subcarpeta basada en la categoría de la prenda en minúsculas (ej: `estilos/superior/`, `estilos/calzado/`, etc.).
+- [ ] **Retorno de URLs Absolutas:** El endpoint `/api/upload` debe retornar URLs absolutas válidas (ej: `https://[bucket-name].s3.[region].amazonaws.com/estilos/[categoria]/[unique-name].[extension]`).
 - [ ] **Cumplimiento de Esquema Zod:** Las URLs absolutas devueltas por S3 deben pasar satisfactoriamente la validación de `.url()` del esquema `PrendaZodSchema` en el servidor y cliente.
 - [ ] **Asignación Correcta de Metadata en S3:** Cada imagen debe subirse con su respectivo `ContentType` (MIME type: `image/jpeg`, `image/png`, `image/webp`) para asegurar que el navegador la renderice correctamente en lugar de descargarla.
 - [ ] **Configuración por Variables de Entorno:** Toda la configuración de AWS (credenciales, región, bucket) debe realizarse a través de variables de entorno seguras. Si falta alguna variable requerida, el endpoint debe responder con un error de configuración del servidor (500).
+
 
 ---
 
@@ -71,14 +73,16 @@ const s3Client = new S3Client({
   },
 });
 
-export async function uploadToS3(buffer: Buffer, filename: string, mimeType: string): Promise<string> {
+export async function uploadToS3(buffer: Buffer, filename: string, mimeType: string, categoria: string): Promise<string> {
   const bucketName = process.env.AWS_BUCKET_NAME;
   
   if (!bucketName || !process.env.AWS_REGION) {
     throw new Error('Configuración de AWS S3 incompleta en variables de entorno.');
   }
 
-  const key = `prendas/${Date.now()}-${filename}`;
+  // Sanitizar y estructurar la ruta con base 'estilos' y subcarpeta por categoría
+  const folder = (categoria || 'varios').toLowerCase().trim();
+  const key = `estilos/${folder}/${Date.now()}-${filename}`;
 
   await s3Client.send(
     new PutObjectCommand({
@@ -99,8 +103,8 @@ export async function uploadToS3(buffer: Buffer, filename: string, mimeType: str
 ## 7. Casos de Prueba y QA
 
 ### Escenario 1: Carga e Inserción con URLs de S3 (Flujo Exitoso)
-* **Acción:** El usuario registra una prenda con sus fotos correspondientes.
-* **Proceso:** El servidor procesa, comprime la imagen y la sube a S3. S3 devuelve la URL `https://mi-bucket.s3.us-east-1.amazonaws.com/prendas/12345-foto.jpg`. Esta URL se almacena en la prenda.
+* **Acción:** El usuario registra una prenda con sus fotos correspondientes y la categoría "Superior".
+* **Proceso:** El servidor procesa, comprime la imagen y la sube a S3 en la ruta `estilos/superior/12345-foto.jpg`. S3 devuelve la URL `https://mi-bucket.s3.us-east-1.amazonaws.com/estilos/superior/12345-foto.jpg`. Esta URL se almacena en la prenda.
 * **Resultado:** La Server Action valida la prenda correctamente a través de Zod (sin fallos de validación de URL) y la prenda se guarda con éxito.
 
 ### Escenario 2: Intento de subida sin variables de entorno configuradas (Caso de Falla)

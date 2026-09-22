@@ -13,7 +13,7 @@ Este documento resume el progreso actual del proyecto al finalizar la sesión de
 | **Épica 1** | **Registro y Captura de Prendas** | | |
 | ➔ **[HU1](HU1_Registro_Prenda.md)** | Registro de Prenda con Foto y Metadata | **Completado (100%)** | Formulario de captura brutalista, soporte de cámara web/móvil, carga multi-foto (máx 4) y persistencia en MongoDB. |
 | ➔ **[HU1.1](HU1_1_Compresion_Imagenes.md)** | Compresión en Servidor y Límite de Carga (10MB) | **Completado (100%)** | Ampliación a 10MB en cliente/servidor, compresión con Sharp (máx 3MB) y salvaguarda de tamaño. |
-| ➔ **[HU1.2](HU1_2_Almacenamiento_S3.md)** | Almacenamiento de Imágenes en AWS S3 | *Pendiente* | Integración con AWS SDK S3, generación de URLs absolutas y validación de esquema. |
+| ➔ **[HU1.2](HU1_2_Almacenamiento_S3.md)** | Almacenamiento de Imágenes en AWS S3 | **Completado (100%)** | Integración con AWS SDK S3, generación de URLs absolutas y validación de esquema. |
 | **Épica 2** | **Visualización y Exploración** | | |
 | ➔ **[HU2](HU2_Vista_Galeria.md)** | Vista de Galería / Listado | *Pendiente* | Grid responsivo, filtros sincronizados con URL, indicadores de disponibilidad. |
 | ➔ **[HU3](HU3_Detalle_Prenda.md)** | Vista de Detalle de Prenda | *Pendiente* | Modal Dialog/Drawer, carrusel de imágenes, badges de metadatos. |
@@ -42,6 +42,12 @@ Este documento resume el progreso actual del proyecto al finalizar la sesión de
 - **Utilidad de Compresión:** Se implementó [lib/image-compress.ts](file:///root/code/estilo/lib/image-compress.ts) para redimensionar imágenes (máx 2048px en lado más largo), comprimir con calidad inicial de 80% según el formato, y salvaguardar que el archivo de salida pese un máximo de 3 MB (con re-compresión agresiva o conversión a JPEG si es necesario).
 - **Ampliación de Límite en Servidor:** Se actualizó [app/api/upload/route.ts](file:///root/code/estilo/app/api/upload/route.ts) para permitir archivos de hasta 10 MB e integrar el flujo de compresión.
 - **Validación e Información en Interfaz:** Se añadió validación de tamaño (hasta 10 MB) en el formulario cliente de [app/prendas/registrar/page.tsx](file:///root/code/estilo/app/prendas/registrar/page.tsx) y se actualizó la etiqueta visual informativa en [components/prendas/MultiImageUpload.tsx](file:///root/code/estilo/components/prendas/MultiImageUpload.tsx) a "MÁX 10MB CADA UNA".
+
+### 4. Almacenamiento de Imágenes en AWS S3 (HU1.2)
+- **AWS SDK Integration:** Se instaló e integró la biblioteca `@aws-sdk/client-s3`.
+- **Utilidad de Subida S3:** Se implementó [lib/s3-upload.ts](file:///root/code/estilo/lib/s3-upload.ts) para inicializar el cliente de AWS S3 y subir las imágenes al bucket configurado, organizándolas en una carpeta base `"estilos"` y subcarpetas segmentadas por la categoría de la prenda (ej. `estilos/superior/`).
+- **Endpoint de Subida Actualizado:** Se actualizó [app/api/upload/route.ts](file:///root/code/estilo/app/api/upload/route.ts) para recuperar la categoría de la prenda, comprimirla con Sharp y subirla a S3, retornando la URL absoluta que valida correctamente con Zod.
+- **Flujo de Formulario Integrado:** Se modificó [app/prendas/registrar/page.tsx](file:///root/code/estilo/app/prendas/registrar/page.tsx) para adjuntar la categoría seleccionada en el payload `FormData` enviado a la API de carga de imágenes.
 
 ---
 

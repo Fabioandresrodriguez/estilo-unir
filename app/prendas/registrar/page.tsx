@@ -121,6 +121,7 @@ export default function RegistrarPrendaPage() {
       try {
         // 1. Subida de archivos mediante API REST
         const formData = new FormData();
+        formData.append('categoria', data.metadata.categoria);
         images.forEach((img) => {
           if (img.file) {
             formData.append('files', img.file);

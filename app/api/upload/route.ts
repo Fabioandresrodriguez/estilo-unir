@@ -1,23 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
-import { join } from 'path';
-import { existsSync } from 'fs';
 import { compressImage } from '@/lib/image-compress';
+import { uploadToS3 } from '@/lib/s3-upload';
 
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
     const files = formData.getAll('files') as File[];
+    const categoria = (formData.get('categoria') as string) || 'varios';
 
     if (!files || files.length === 0) {
       return NextResponse.json({ error: 'No se enviaron archivos.' }, { status: 400 });
-    }
-
-    const uploadDir = join(process.cwd(), 'public', 'uploads');
-    
-    // Crear el directorio de subidas si no existe
-    if (!existsSync(uploadDir)) {
-      await mkdir(uploadDir, { recursive: true });
     }
 
     const urls: string[] = [];
@@ -41,23 +33,29 @@ export async function POST(req: NextRequest) {
         );
       }
 
-      // Escribir archivo en disco con compresión del lado del servidor
+      // Escribir buffer y comprimir del lado del servidor
       const fileBuffer = Buffer.from(await file.arrayBuffer());
       const { buffer, extension } = await compressImage(fileBuffer, file.type);
 
-      // Generar nombre de archivo único
-      const uniqueName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${extension}`;
-      const filePath = join(uploadDir, uniqueName);
-      await writeFile(filePath, buffer);
+      // Limpiar nombre de archivo original
+      const originalName = file.name || 'foto.jpg';
+      const baseName = originalName.split('.').slice(0, -1).join('.') || 'foto';
+      const cleanFileName = `${baseName}.${extension}`;
 
-      // Registrar URL relativa accesible por el navegador
-      urls.push(`/uploads/${uniqueName}`);
+      // Subir a AWS S3
+      const s3Url = await uploadToS3(buffer, cleanFileName, file.type, categoria);
+      urls.push(s3Url);
     }
 
     return NextResponse.json({ urls }, { status: 200 });
   } catch (error: any) {
     console.error('Error al procesar subida de archivo:', error);
+    if (error.message && error.message.includes('Configuración de AWS S3 incompleta')) {
+      return NextResponse.json(
+        { error: 'Error interno en el servidor: Configuración de almacenamiento incompleta.' },
+        { status: 500 }
+      );
+    }
     return NextResponse.json({ error: 'Error interno en el servidor al subir imágenes.' }, { status: 500 });
   }
 }
-
