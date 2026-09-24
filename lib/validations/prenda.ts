@@ -1,18 +1,18 @@
 import { z } from 'zod';
 
-const categoriasValidas = ['Superior', 'Inferior', 'Entero', 'Calzado', 'Accesorios'] as const;
-const estadosValidos = ['Disponible', 'Sucio', 'Lavandería'] as const;
-const coloresValidos = [
+export const categoriasValidas = ['Superior', 'Inferior', 'Entero', 'Calzado', 'Accesorios'] as const;
+export const estadosValidos = ['Disponible', 'Sucio', 'Lavandería'] as const;
+export const coloresValidos = [
   'Negro', 'Blanco', 'Gris', 'Azul Marino', 'Azul Claro', 
   'Beige', 'Café', 'Verde Oliva', 'Burdeos', 'Rojo', 
   'Amarillo', 'Verde', 'Rosa'
 ] as const;
-const estacionesValidas = ['Primavera', 'Verano', 'Otoño', 'Invierno', 'Todo el año'] as const;
-const estilosValidos = ['Casual', 'Formal', 'Deportivo', 'Streetwear', 'Oficina', 'Fiesta'] as const;
-const impermeabilidadValida = ['Sin Proteccion', 'Repelente', 'Impermeable'] as const;
-const capaPosicionValida = ['Interior', 'Media', 'Exterior', 'Única'] as const;
-const rolCapsulaValido = ['Esencial Neutro', 'Pieza de Acento', 'Declaración'] as const;
-const ocasionesValidas = ['Trabajo', 'Deporte', 'Social', 'Formal', 'Hogar', 'Playa'] as const;
+export const estacionesValidas = ['Primavera', 'Verano', 'Otoño', 'Invierno', 'Todo el año'] as const;
+export const estilosValidos = ['Casual', 'Formal', 'Deportivo', 'Streetwear', 'Oficina', 'Fiesta'] as const;
+export const impermeabilidadValida = ['Sin Proteccion', 'Repelente', 'Impermeable'] as const;
+export const capaPosicionValida = ['Interior', 'Media', 'Exterior', 'Única'] as const;
+export const rolCapsulaValido = ['Esencial Neutro', 'Pieza de Acento', 'Declaración'] as const;
+export const ocasionesValidas = ['Trabajo', 'Deporte', 'Social', 'Formal', 'Hogar', 'Playa'] as const;
 
 export const relacionCategoriaSubcategoria: Record<string, string[]> = {
   Superior: ['Camiseta', 'Camisa', 'Hoodie', 'Chamarra', 'Suéter', 'Top'],
