@@ -43,23 +43,23 @@ export const PrendaZodSchema = z.object({
     talla: z.string().min(1, 'La talla es obligatoria.').trim(),
     notas: z.string().max(300, 'Las notas no pueden superar los 300 caracteres.').optional(),
     climaClo: z.number({
-      invalid_type_error: 'El aislamiento térmico (climaClo) debe ser un número.'
+      message: 'El aislamiento térmico (climaClo) debe ser un número.'
     })
       .min(0.0, 'El aislamiento térmico (climaClo) no puede ser menor a 0.0.')
       .max(2.0, 'El aislamiento térmico (climaClo) no puede ser mayor a 2.0.')
       .optional()
       .nullable(),
     impermeabilidad: z.enum(impermeabilidadValida, {
-      errorMap: () => ({ message: 'El nivel de impermeabilidad seleccionado no es válido.' })
+      message: 'El nivel de impermeabilidad seleccionado no es válido.'
     }).optional().nullable(),
     capaPosicion: z.enum(capaPosicionValida, {
-      errorMap: () => ({ message: 'La capa de posición seleccionada no es válida.' })
+      message: 'La capa de posición seleccionada no es válida.'
     }).optional().nullable(),
     rolCapsula: z.enum(rolCapsulaValido, {
-      errorMap: () => ({ message: 'El rol de armario cápsula seleccionado no es válido.' })
+      message: 'El rol de armario cápsula seleccionado no es válido.'
     }).optional().nullable(),
     ocasiones: z.array(z.enum(ocasionesValidas, {
-      errorMap: () => ({ message: 'Una o más de las ocasiones seleccionadas no son válidas.' })
+      message: 'Una o más de las ocasiones seleccionadas no son válidas.'
     })).optional().nullable(),
     texturaMaterial: z.string().optional().nullable()
   })
