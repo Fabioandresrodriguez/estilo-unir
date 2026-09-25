@@ -42,6 +42,69 @@ interface UploadedImage {
   previewUrl: string;
 }
 
+// Compresión de imagen en cliente (HU1.1 / HU9) - Max 1024px, 80% calidad JPEG
+function compressImageClient(fileOrBlob: File | Blob): Promise<Blob> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        
+        const maxDim = 1024;
+        if (width > maxDim || height > maxDim) {
+          if (width > height) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          reject(new Error('No se pudo obtener el contexto 2D del canvas'));
+          return;
+        }
+        
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        canvas.toBlob(
+          (blob) => {
+            if (blob) {
+              resolve(blob);
+            } else {
+              reject(new Error('La conversión a blob falló'));
+            }
+          },
+          'image/jpeg',
+          0.80
+        );
+      };
+      img.onerror = (err) => reject(err);
+      img.src = event.target?.result as string;
+    };
+    reader.onerror = (err) => reject(err);
+    reader.readAsDataURL(fileOrBlob);
+  });
+}
+
+function blobToBase64(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      resolve(reader.result as string);
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
 export default function RegistrarPrendaPage() {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -49,6 +112,8 @@ export default function RegistrarPrendaPage() {
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [iaStatus, setIaStatus] = useState<string | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   const form = useForm<PrendaInput>({
     resolver: zodResolver(PrendaZodSchema),
@@ -63,7 +128,13 @@ export default function RegistrarPrendaPage() {
         estaciones: [],
         estilo: [],
         talla: '',
-        notas: ''
+        notas: '',
+        climaClo: null,
+        impermeabilidad: null,
+        capaPosicion: null,
+        rolCapsula: null,
+        ocasiones: [],
+        texturaMaterial: ''
       }
     }
   });
@@ -73,6 +144,65 @@ export default function RegistrarPrendaPage() {
   // Observar categoría seleccionada para actualizar subcategorías
   const selectedCategoria = watch('metadata.categoria');
   const subcategoriasDisponibles = relacionCategoriaSubcategoria[selectedCategoria] || [];
+
+  const analyzeImageWithIA = async (fileOrBlob: File | Blob) => {
+    setIsAnalyzing(true);
+    setIaStatus('Comprimiendo imagen en cliente...');
+    try {
+      let compressedBlob: Blob;
+      try {
+        compressedBlob = await compressImageClient(fileOrBlob);
+        setIaStatus('Imagen comprimida con éxito. Analizando prenda con IA...');
+      } catch (err) {
+        console.warn('Fallo la compresión en cliente, usando imagen original:', err);
+        compressedBlob = fileOrBlob;
+        setIaStatus('Analizando prenda con IA...');
+      }
+
+      const base64Image = await blobToBase64(compressedBlob);
+
+      const res = await fetch('/api/prendas/analyze-image', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ image: base64Image }),
+      });
+
+      if (!res.ok) {
+        throw new Error('La respuesta de la API de IA no fue exitosa.');
+      }
+
+      const iaData = await res.json();
+
+      if (iaData.nombre) setValue('nombre', iaData.nombre, { shouldValidate: true });
+      if (iaData.metadata) {
+        const meta = iaData.metadata;
+        if (meta.categoria) setValue('metadata.categoria', meta.categoria, { shouldValidate: true });
+        if (meta.subcategoria) setValue('metadata.subcategoria', meta.subcategoria, { shouldValidate: true });
+        if (meta.colores) setValue('metadata.colores', meta.colores, { shouldValidate: true });
+        if (meta.estaciones) setValue('metadata.estaciones', meta.estaciones, { shouldValidate: true });
+        if (meta.estilo) setValue('metadata.estilo', meta.estilo, { shouldValidate: true });
+        if (meta.talla) setValue('metadata.talla', meta.talla, { shouldValidate: true });
+        if (meta.notas) setValue('metadata.notas', meta.notas, { shouldValidate: true });
+        
+        if (meta.climaClo !== undefined) setValue('metadata.climaClo', meta.climaClo, { shouldValidate: true });
+        if (meta.impermeabilidad) setValue('metadata.impermeabilidad', meta.impermeabilidad, { shouldValidate: true });
+        if (meta.capaPosicion) setValue('metadata.capaPosicion', meta.capaPosicion, { shouldValidate: true });
+        if (meta.rolCapsula) setValue('metadata.rolCapsula', meta.rolCapsula, { shouldValidate: true });
+        if (meta.ocasiones) setValue('metadata.ocasiones', meta.ocasiones, { shouldValidate: true });
+        if (meta.texturaMaterial) setValue('metadata.texturaMaterial', meta.texturaMaterial, { shouldValidate: true });
+      }
+
+      setIaStatus('✨ Formulario auto-completado con IA con éxito.');
+    } catch (err: any) {
+      console.error('Error al auto-completar con IA:', err);
+      setIaStatus('❌ Falló el auto-completado con IA. Ingrese los datos manualmente.');
+    } finally {
+      setIsAnalyzing(false);
+      setTimeout(() => setIaStatus(null), 5000);
+    }
+  };
 
   // Gestión de imágenes locales
   const handleAddImage = (file: File, previewUrl: string) => {
@@ -84,6 +214,9 @@ export default function RegistrarPrendaPage() {
     setImages(prev => {
       const updated = [...prev, { file, previewUrl }];
       setValue('imagenes', updated.map(img => img.previewUrl), { shouldValidate: true });
+      if (updated.length === 1) {
+        analyzeImageWithIA(file);
+      }
       return updated;
     });
     setUploadError(null);
@@ -93,6 +226,9 @@ export default function RegistrarPrendaPage() {
     setImages(prev => {
       const updated = [...prev, { blob, previewUrl }];
       setValue('imagenes', updated.map(img => img.previewUrl), { shouldValidate: true });
+      if (updated.length === 1) {
+        analyzeImageWithIA(blob);
+      }
       return updated;
     });
     setUploadError(null);
@@ -101,7 +237,6 @@ export default function RegistrarPrendaPage() {
   const handleRemoveImage = (index: number) => {
     setImages(prev => {
       const updated = [...prev];
-      // Revocar URL temporal para evitar fugas de memoria
       URL.revokeObjectURL(updated[index].previewUrl);
       updated.splice(index, 1);
       setValue('imagenes', updated.map(img => img.previewUrl), { shouldValidate: true });
@@ -205,6 +340,17 @@ export default function RegistrarPrendaPage() {
           {successMessage && (
             <div className="border-[3px] border-[#008000] p-4 text-[#008000] bg-white font-mono text-sm uppercase">
               [ÉXITO]: {successMessage}
+            </div>
+          )}
+
+          {/* Región en vivo para accesibilidad y mensajes visuales del estado de IA */}
+          {iaStatus && (
+            <div 
+              role="status" 
+              aria-live="polite"
+              className="border-[3px] border-black bg-yellow-100 p-4 text-black font-mono text-sm uppercase tracking-[0.5px] animate-pulse"
+            >
+              [IA STATUS]: {iaStatus}
             </div>
           )}
 
@@ -474,6 +620,169 @@ export default function RegistrarPrendaPage() {
                   />
                 )}
               />
+            </div>
+
+            {/* Sección de Metadatos Extendidos (Opcionales) */}
+            <div className="border-t-[3px] border-black pt-6 flex flex-col gap-6">
+              <span className="text-black font-heading text-base uppercase tracking-wider block">
+                Metadatos Avanzados (Inferencia de IA)
+              </span>
+
+              {/* climaClo */}
+              <div>
+                <label className="text-black font-heading text-sm uppercase tracking-wider mb-2 block">
+                  Aislamiento Térmico (climaClo)
+                </label>
+                <Controller
+                  name="metadata.climaClo"
+                  control={control}
+                  render={({ field }) => (
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0.0"
+                      max="2.0"
+                      value={field.value ?? ''}
+                      onChange={(e) => field.onChange(e.target.value === '' ? null : parseFloat(e.target.value))}
+                      placeholder="Ej: 0.45"
+                      className={`bg-[#F0F0F0] text-black border-[3px] ${errors.metadata?.climaClo ? 'border-[#FF0000]' : 'border-black'} p-3 font-mono text-sm focus:border-[5px] focus:outline-none w-full`}
+                    />
+                  )}
+                />
+                {errors.metadata?.climaClo && (
+                  <p className="text-[#FF0000] font-sans text-xs mt-1">{errors.metadata.climaClo.message}</p>
+                )}
+              </div>
+
+              {/* impermeabilidad */}
+              <div>
+                <label className="text-black font-heading text-sm uppercase tracking-wider mb-2 block">
+                  Nivel de Impermeabilidad
+                </label>
+                <Controller
+                  name="metadata.impermeabilidad"
+                  control={control}
+                  render={({ field }) => (
+                    <select
+                      value={field.value ?? ''}
+                      onChange={(e) => field.onChange(e.target.value === '' ? null : e.target.value)}
+                      className="bg-[#F0F0F0] text-black border-[3px] border-black p-3 font-mono text-sm focus:border-[5px] focus:outline-none w-full cursor-pointer rounded-none"
+                    >
+                      <option value="">No clasificado</option>
+                      <option value="Sin Proteccion">Sin Protección</option>
+                      <option value="Repelente">Repelente</option>
+                      <option value="Impermeable">Impermeable</option>
+                    </select>
+                  )}
+                />
+              </div>
+
+              {/* capaPosicion */}
+              <div>
+                <label className="text-black font-heading text-sm uppercase tracking-wider mb-2 block">
+                  Capa de Posicionamiento Térmico
+                </label>
+                <Controller
+                  name="metadata.capaPosicion"
+                  control={control}
+                  render={({ field }) => (
+                    <select
+                      value={field.value ?? ''}
+                      onChange={(e) => field.onChange(e.target.value === '' ? null : e.target.value)}
+                      className="bg-[#F0F0F0] text-black border-[3px] border-black p-3 font-mono text-sm focus:border-[5px] focus:outline-none w-full cursor-pointer rounded-none"
+                    >
+                      <option value="">No clasificado</option>
+                      <option value="Interior">Interior</option>
+                      <option value="Media">Media</option>
+                      <option value="Exterior">Exterior</option>
+                      <option value="Única">Única</option>
+                    </select>
+                  )}
+                />
+              </div>
+
+              {/* rolCapsula */}
+              <div>
+                <label className="text-black font-heading text-sm uppercase tracking-wider mb-2 block">
+                  Rol en Armario Cápsula
+                </label>
+                <Controller
+                  name="metadata.rolCapsula"
+                  control={control}
+                  render={({ field }) => (
+                    <select
+                      value={field.value ?? ''}
+                      onChange={(e) => field.onChange(e.target.value === '' ? null : e.target.value)}
+                      className="bg-[#F0F0F0] text-black border-[3px] border-black p-3 font-mono text-sm focus:border-[5px] focus:outline-none w-full cursor-pointer rounded-none"
+                    >
+                      <option value="">No clasificado</option>
+                      <option value="Esencial Neutro">Esencial Neutro</option>
+                      <option value="Pieza de Acento">Pieza de Acento</option>
+                      <option value="Declaración">Declaración</option>
+                    </select>
+                  )}
+                />
+              </div>
+
+              {/* ocasiones */}
+              <div>
+                <label className="text-black font-heading text-sm uppercase tracking-wider mb-2 block">
+                  Ocasiones de Uso
+                </label>
+                <Controller
+                  name="metadata.ocasiones"
+                  control={control}
+                  render={({ field }) => {
+                    const selectedOcasiones = field.value || [];
+                    const ocasionesDisponibles = ['Trabajo', 'Deporte', 'Social', 'Formal', 'Hogar', 'Playa'];
+                    const toggleOcasion = (oc: string) => {
+                      const isSelected = selectedOcasiones.includes(oc as any);
+                      const updated = isSelected
+                        ? selectedOcasiones.filter(o => o !== oc)
+                        : [...selectedOcasiones, oc];
+                      field.onChange(updated);
+                    };
+
+                    return (
+                      <div className="flex flex-wrap gap-2">
+                        {ocasionesDisponibles.map((oc) => {
+                          const isSelected = selectedOcasiones.includes(oc as any);
+                          return (
+                            <button
+                              key={oc}
+                              type="button"
+                              onClick={() => toggleOcasion(oc)}
+                              className={`border-[2px] border-black px-3 py-1.5 font-mono uppercase text-[10px] tracking-[1px] cursor-pointer transition-colors ${isSelected ? 'bg-black text-white' : 'bg-white text-black hover:bg-[#F0F0F0]'}`}
+                            >
+                              {oc}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    );
+                  }}
+                />
+              </div>
+
+              {/* texturaMaterial */}
+              <div>
+                <label className="text-black font-heading text-sm uppercase tracking-wider mb-2 block">
+                  Textura y Material
+                </label>
+                <Controller
+                  name="metadata.texturaMaterial"
+                  control={control}
+                  render={({ field }) => (
+                    <input
+                      type="text"
+                      {...field}
+                      value={field.value ?? ''}
+                      placeholder="Ej. Lana suave, denim grueso"
+                      className="bg-[#F0F0F0] text-black border-[3px] border-black p-3 font-mono text-sm focus:border-[5px] focus:outline-none w-full"
+                    />
+                  )}
+                />
+              </div>
             </div>
 
             {/* Alertas de Error */}
