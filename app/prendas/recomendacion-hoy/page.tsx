@@ -37,6 +37,8 @@ export default function RecomendacionHoyPage() {
   const [selectedClima, setSelectedClima] = useState<ClimaOption>('Templado');
   const [selectedOcasion, setSelectedOcasion] = useState<OcasionOption>('Social');
   const [aiResponse, setAiResponse] = useState<string | null>(null);
+  const [outfits, setOutfits] = useState<any[]>([]);
+  const [lluviaActive, setLluviaActive] = useState(false);
 
   // Web Speech API - Compatibilidad
   const [speechSupported, setSpeechSupported] = useState(true);
@@ -228,80 +230,57 @@ export default function RecomendacionHoyPage() {
     setAnimState('PROCESSING');
     setStatusMessage('Procesando recomendación en base a tu clóset...');
     setAccessibilityStatus('IA procesando tu recomendación de vestidor.');
+    setOutfits([]);
+    setAiResponse(null);
+
+    let temp = 22;
+    if (selectedClima === 'Frío') temp = 8;
+    else if (selectedClima === 'Fresco') temp = 15;
+    else if (selectedClima === 'Cálido') temp = 28;
 
     try {
-      // Intentar obtener las prendas registradas en MongoDB
-      const res = await fetch('/api/prendas?limit=100');
+      const res = await fetch('/api/recomendaciones', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          temperatura: temp,
+          lluvia: lluviaActive,
+          ocasion: selectedOcasion
+        })
+      });
+
       const responseData = await res.json();
-      const prendas = responseData.data || [];
 
-      // Lógica de recomendación simple en el cliente
-      // Filtrar prendas según el clima y ocasión solicitada
-      const superiores = prendas.filter((p: any) => p.metadata.categoria === 'Superior');
-      const inferiores = prendas.filter((p: any) => p.metadata.categoria === 'Inferior');
-      const calzados = prendas.filter((p: any) => p.metadata.categoria === 'Calzado');
-
-      // Buscar prendas adecuadas al clima
-      let prendaSuperior = superiores[0];
-      let prendaInferior = inferiores[0];
-      let calzado = calzados[0];
-
-      if (selectedClima === 'Frío') {
-        // Buscar abrigos o chamarras pesadas
-        prendaSuperior = superiores.find((p: any) => 
-          p.metadata.subcategoria === 'Chamarra' || 
-          p.metadata.subcategoria === 'Suéter' || 
-          p.metadata.subcategoria === 'Hoodie' ||
-          (p.metadata.climaClo && p.metadata.climaClo > 0.4)
-        ) || superiores[0];
-      } else if (selectedClima === 'Cálido') {
-        // Buscar camisetas o tops ligeros
-        prendaSuperior = superiores.find((p: any) => 
-          p.metadata.subcategoria === 'Camiseta' || 
-          p.metadata.subcategoria === 'Top'
-        ) || superiores[0];
+      if (!res.ok) {
+        throw new Error(responseData.error || 'Error al generar recomendaciones.');
       }
 
-      // Buscar prenda inferior combinada
-      if (selectedOcasion === 'Deporte') {
-        prendaInferior = inferiores.find((p: any) => 
-          p.metadata.subcategoria === 'Joggers' || 
-          p.metadata.subcategoria === 'Shorts'
-        ) || inferiores[0];
-        calzado = calzados.find((p: any) => p.metadata.subcategoria === 'Sneakers') || calzados[0];
-      } else if (selectedOcasion === 'Formal') {
-        prendaInferior = inferiores.find((p: any) => p.metadata.subcategoria === 'Pantalón') || inferiores[0];
-        calzado = calzados.find((p: any) => p.metadata.subcategoria === 'Zapatos Formales') || calzados[0];
-      }
+      const generatedOutfits = responseData.outfits || [];
+      setOutfits(generatedOutfits);
 
-      // Formular la justificación del conjunto (TTS compatible)
-      let recText = '';
-      if (prendaSuperior && prendaInferior) {
-        recText = `He seleccionado un conjunto ideal para un clima ${selectedClima} y una ocasión de tipo ${selectedOcasion}. Te recomiendo vestir tu superior "${prendaSuperior.nombre}" combinada con tu prenda inferior "${prendaInferior.nombre}". `;
-        if (calzado) {
-          recText += `Como calzado, sugiero tus "${calzado.nombre}" para mantener la comodidad y el estilo correcto. `;
-        }
-        recText += `Esta combinación te mantendrá en la temperatura perfecta y se ajustará de manera ideal al contexto de hoy.`;
-      } else {
-        // Fallback genérico si no hay prendas en la base de datos
-        recText = `He analizado tu contexto de hoy para clima ${selectedClima} y ocasión ${selectedOcasion}. Te recomiendo vestir una chamarra abrigadora con unos jeans oscuros y tus sneakers favoritos. Esta elección te proveerá el aislamiento necesario y un estilo casual ideal para el día de hoy.`;
-      }
-
-      // Dar feedback
-      setTimeout(() => {
-        setAiResponse(recText);
-        setAnimState('LATENCY');
+      // Concatenar las justificaciones para que el TTS las lea en voz alta (Escenario 2)
+      if (generatedOutfits.length > 0) {
+        const textToSpeak = generatedOutfits.map((o: any, idx: number) => `Opción ${idx + 1}: ${o.nombre}. ${o.justificacionEstilo}`).join(' ');
+        setAiResponse(textToSpeak);
         setStatusMessage('Recomendación de vestidor completada.');
         setAccessibilityStatus('Recomendación generada. Iniciando lectura en voz alta.');
         
         // Disparar Text-to-Speech (Escenario 2)
-        speakText(recText);
-      }, 2000);
+        speakText(textToSpeak);
+      } else {
+        setStatusMessage('No se encontraron opciones viables.');
+        setAccessibilityStatus('No se recibieron recomendaciones.');
+      }
 
-    } catch (err) {
+      setAnimState('LATENCY');
+
+    } catch (err: any) {
       console.error('Error al generar recomendación:', err);
       setAnimState('LATENCY');
-      setStatusMessage('Ocurrió un error al consultar el guardarropa.');
+      setStatusMessage('Error al consultar recomendaciones.');
+      setSpeechError(err.message || 'Error de comunicación con el motor de recomendaciones.');
     }
   };
 
@@ -609,22 +588,77 @@ export default function RecomendacionHoyPage() {
                 ))}
               </div>
             </div>
+
+            {/* Selector de Lluvia (Escenario 2) */}
+            <div>
+              <span className="font-mono text-[11px] text-gray-500 uppercase block mb-2">Lluvia:</span>
+              <button
+                type="button"
+                onClick={() => {
+                  const newVal = !lluviaActive;
+                  setLluviaActive(newVal);
+                  if (newVal) {
+                    analyzeKeywords('lluvia');
+                  }
+                }}
+                className={`border-[2px] border-black px-3 py-1.5 font-mono uppercase text-[10px] tracking-[1px] cursor-pointer transition-colors ${lluviaActive ? 'bg-black text-white' : 'bg-white text-black hover:bg-[#F0F0F0]'}`}
+              >
+                {lluviaActive ? '🌧️ Con Lluvia' : '☀️ Sin Lluvia'}
+              </button>
+            </div>
           </div>
 
           {/* Panel de Respuesta y Reproducción TTS (Escenario 2) */}
-          {aiResponse && (
-            <div className="border-[5px] border-black bg-white p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex flex-col gap-4 animate-in slide-in-from-bottom-5 duration-200">
-              <div className="flex justify-between items-center border-b-[3px] border-black pb-2">
-                <span className="font-heading text-xs uppercase tracking-wider">Propuesta del Asistente</span>
-                <span className="font-mono text-xs font-bold text-[#008000]">[OK]</span>
-              </div>
+          {/* Opciones de Outfits Recomendados (HU13) */}
+          {outfits.length > 0 && (
+            <div className="flex flex-col gap-6">
+              <span className="font-heading text-sm uppercase tracking-wider block">
+                Opciones de Outfits Propuestos por la IA
+              </span>
               
-              <p className="font-mono text-sm leading-relaxed text-black bg-[#F9F9F9] p-3 border-[2px] border-black">
-                {aiResponse}
-              </p>
+              {outfits.map((outfit, index) => (
+                <div 
+                  key={index} 
+                  className="border-[5px] border-black bg-white p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex flex-col gap-4 animate-in slide-in-from-bottom-5 duration-200"
+                >
+                  <div className="flex justify-between items-center border-b-[3px] border-black pb-2">
+                    <span className="font-heading text-sm uppercase tracking-wide">
+                      Opción {index + 1}: {outfit.nombre}
+                    </span>
+                    <span className="font-mono text-xs font-bold text-[#008000]">[VÁLIDO]</span>
+                  </div>
 
-              {/* Controles de Audio Brutalistas para TTS (Text-to-Speech) */}
-              <div className="flex flex-wrap gap-2 items-center justify-end border-t-[2px] border-black pt-3">
+                  <p className="font-mono text-xs leading-relaxed text-black bg-[#F9F9F9] p-3 border-[2px] border-black">
+                    {outfit.justificacionEstilo}
+                  </p>
+
+                  <div className="flex flex-col gap-2">
+                    <span className="font-mono text-[10px] text-gray-500 uppercase">Prendas sugeridas (IDs):</span>
+                    <div className="flex flex-wrap gap-1">
+                      {outfit.prendas.map((prendaId: string) => (
+                        <span 
+                          key={prendaId} 
+                          className="bg-[#F0F0F0] border border-black font-mono text-[9px] px-2 py-0.5"
+                        >
+                          ID: {prendaId}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Panel de Control de Audio para TTS (Escenario 2) */}
+          {aiResponse && (
+            <div className="border-[5px] border-black bg-white p-4 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex flex-col gap-3">
+              <div className="flex justify-between items-center border-b-[2px] border-black pb-2">
+                <span className="font-heading text-xs uppercase tracking-wider">Control de Lectura de la IA</span>
+                <span className="font-mono text-[10px] text-[#008000]">[TTS ACTIVO]</span>
+              </div>
+
+              <div className="flex flex-wrap gap-2 items-center justify-end">
                 <span className="font-mono text-[10px] text-gray-500 uppercase mr-auto">
                   {isTtsPlaying ? (isTtsPaused ? "Lectura pausada" : "Leyendo en voz alta...") : "Audio listo"}
                 </span>
