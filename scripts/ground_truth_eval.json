@@ -1,0 +1,555 @@
+{
+  "ea7b6656-3f84-4eb3-9099-23e623fc1018": {
+    "cat": "Superior",
+    "subcat": "Camiseta",
+    "color": [
+      "Burdeos"
+    ],
+    "ocasiones": [
+      "Social",
+      "Hogar"
+    ]
+  },
+  "ea2ffd4d-9b25-4ca8-9dc2-bd27f1cc59fa": {
+    "cat": "Superior",
+    "subcat": "Camiseta",
+    "color": [
+      "Blanco"
+    ],
+    "ocasiones": [
+      "Social",
+      "Hogar"
+    ]
+  },
+  "b0c03127-9dfb-4573-8934-1958396937bf": {
+    "cat": "Superior",
+    "subcat": "Camisa",
+    "color": [
+      "Blanco",
+      "Azul Claro"
+    ],
+    "ocasiones": [
+      "Trabajo",
+      "Social"
+    ]
+  },
+  "4c8f245e-a039-46fd-a6b9-1bb51e83fc05": {
+    "cat": "Superior",
+    "subcat": "Camiseta",
+    "color": [
+      "Negro"
+    ],
+    "ocasiones": [
+      "Social",
+      "Hogar"
+    ]
+  },
+  "95609fcf-b2c2-4f35-8454-a308262e30ea": {
+    "cat": "Superior",
+    "subcat": "Camiseta",
+    "color": [
+      "Gris"
+    ],
+    "ocasiones": [
+      "Social",
+      "Hogar"
+    ]
+  },
+  "04b42565-23ce-47d9-8f11-e3f1fb0d5051": {
+    "cat": "Superior",
+    "subcat": "Top",
+    "color": [
+      "Negro"
+    ],
+    "ocasiones": [
+      "Social",
+      "Fiesta"
+    ]
+  },
+  "1b2ace0a-382e-4b87-8e9d-35cbcfac636b": {
+    "cat": "Superior",
+    "subcat": "Chamarra",
+    "color": [
+      "Negro"
+    ],
+    "ocasiones": [
+      "Social",
+      "Trabajo"
+    ]
+  },
+  "6ba8aeb1-a812-4bd7-a0b3-d898aebe3400": {
+    "cat": "Superior",
+    "subcat": "Top",
+    "color": [
+      "Blanco"
+    ],
+    "ocasiones": [
+      "Social",
+      "Fiesta"
+    ]
+  },
+  "534cb9e4-658e-48a9-a9d9-365149ee52e8": {
+    "cat": "Superior",
+    "subcat": "Camiseta",
+    "color": [
+      "Azul Marino"
+    ],
+    "ocasiones": [
+      "Social",
+      "Hogar"
+    ]
+  },
+  "5805e9ba-176c-461b-87f7-ff400291d0fc": {
+    "cat": "Superior",
+    "subcat": "Suéter",
+    "color": [
+      "Gris"
+    ],
+    "ocasiones": [
+      "Trabajo",
+      "Social"
+    ]
+  },
+  "8f6822c3-862b-4126-9a35-585569aec240": {
+    "cat": "Superior",
+    "subcat": "Suéter",
+    "color": [
+      "Azul Marino"
+    ],
+    "ocasiones": [
+      "Trabajo",
+      "Social"
+    ]
+  },
+  "f968404d-6c3a-465e-9edd-347784880455": {
+    "cat": "Superior",
+    "subcat": "Camiseta",
+    "color": [
+      "Verde"
+    ],
+    "ocasiones": [
+      "Social",
+      "Hogar"
+    ]
+  },
+  "c395de85-824c-4cbe-ad6b-ed80f5c15fb7": {
+    "cat": "Superior",
+    "subcat": "Camiseta",
+    "color": [
+      "Blanco"
+    ],
+    "ocasiones": [
+      "Social",
+      "Hogar"
+    ]
+  },
+  "4acdd295-b0b4-4991-a6cd-c9d2c322c347": {
+    "cat": "Superior",
+    "subcat": "Camiseta",
+    "color": [
+      "Rojo"
+    ],
+    "ocasiones": [
+      "Social",
+      "Hogar"
+    ]
+  },
+  "f2ae0355-82ec-4363-ac61-470d7f422a45": {
+    "cat": "Superior",
+    "subcat": "Top",
+    "color": [
+      "Blanco"
+    ],
+    "ocasiones": [
+      "Hogar",
+      "Social"
+    ]
+  },
+  "d8445328-a318-434b-9c4e-fa29cf04be41": {
+    "cat": "Superior",
+    "subcat": "Camisa",
+    "color": [
+      "Azul Marino"
+    ],
+    "ocasiones": [
+      "Trabajo",
+      "Social"
+    ]
+  },
+  "330f1f98-0d3d-4c64-bd82-518e6e157d08": {
+    "cat": "Superior",
+    "subcat": "Camiseta",
+    "color": [
+      "Amarillo"
+    ],
+    "ocasiones": [
+      "Social",
+      "Hogar"
+    ]
+  },
+  "fb145f9c-024a-4177-ae55-4ef413756ee9": {
+    "cat": "Superior",
+    "subcat": "Camiseta",
+    "color": [
+      "Negro"
+    ],
+    "ocasiones": [
+      "Social",
+      "Hogar"
+    ]
+  },
+  "5d3a1404-697f-479f-9090-c1ecd0413d27": {
+    "cat": "Inferior",
+    "subcat": "Shorts",
+    "color": [
+      "Beige"
+    ],
+    "ocasiones": [
+      "Social",
+      "Hogar"
+    ]
+  },
+  "c995c900-693d-4dd6-8995-43f3051ec488": {
+    "cat": "Inferior",
+    "subcat": "Pantalón",
+    "color": [
+      "Negro",
+      "Blanco"
+    ],
+    "ocasiones": [
+      "Social",
+      "Hogar"
+    ]
+  },
+  "70045b01-b350-4918-be74-2f627290ad7a": {
+    "cat": "Inferior",
+    "subcat": "Falda",
+    "color": [
+      "Azul Marino"
+    ],
+    "ocasiones": [
+      "Social",
+      "Trabajo"
+    ]
+  },
+  "5dcffea5-5111-4397-b9ed-313b41bdeea8": {
+    "cat": "Inferior",
+    "subcat": "Shorts",
+    "color": [
+      "Azul Claro"
+    ],
+    "ocasiones": [
+      "Social",
+      "Hogar"
+    ]
+  },
+  "d44cfac9-3fda-47ba-8eb1-8b130f60b08c": {
+    "cat": "Inferior",
+    "subcat": "Falda",
+    "color": [
+      "Negro"
+    ],
+    "ocasiones": [
+      "Social",
+      "Fiesta"
+    ]
+  },
+  "97074b7f-706a-4c17-b875-bd9baa5bed0e": {
+    "cat": "Inferior",
+    "subcat": "Pantalón",
+    "color": [
+      "Gris"
+    ],
+    "ocasiones": [
+      "Trabajo",
+      "Social"
+    ]
+  },
+  "84a4a5a4-fb02-4009-916d-7e82d65c3e12": {
+    "cat": "Inferior",
+    "subcat": "Pantalón",
+    "color": [
+      "Azul Marino"
+    ],
+    "ocasiones": [
+      "Trabajo",
+      "Social"
+    ]
+  },
+  "f8b84112-9110-4628-91e8-9d22a13767f3": {
+    "cat": "Inferior",
+    "subcat": "Falda",
+    "color": [
+      "Blanco"
+    ],
+    "ocasiones": [
+      "Social",
+      "Fiesta"
+    ]
+  },
+  "5dc34a85-d7f8-45bc-b922-2eae1a704f4b": {
+    "cat": "Inferior",
+    "subcat": "Shorts",
+    "color": [
+      "Negro"
+    ],
+    "ocasiones": [
+      "Social",
+      "Hogar"
+    ]
+  },
+  "5f2c69cd-918b-4ee0-9e74-7fa12d5095ab": {
+    "cat": "Inferior",
+    "subcat": "Shorts",
+    "color": [
+      "Verde"
+    ],
+    "ocasiones": [
+      "Social",
+      "Hogar"
+    ]
+  },
+  "c4f11a12-2fcd-4268-8045-5a00aec7e656": {
+    "cat": "Inferior",
+    "subcat": "Pantalón",
+    "color": [
+      "Negro"
+    ],
+    "ocasiones": [
+      "Trabajo",
+      "Social"
+    ]
+  },
+  "9a858530-6e0d-4bf0-8900-42055c64ddaf": {
+    "cat": "Inferior",
+    "subcat": "Pantalón",
+    "color": [
+      "Café"
+    ],
+    "ocasiones": [
+      "Trabajo",
+      "Social"
+    ]
+  },
+  "3b86d877-2b9e-4c8b-a6a2-1d87513309d0": {
+    "cat": "Calzado",
+    "subcat": "Botas",
+    "color": [
+      "Negro"
+    ],
+    "ocasiones": [
+      "Social",
+      "Trabajo"
+    ]
+  },
+  "bf78527f-0734-44fd-a968-f6c32c12d61e": {
+    "cat": "Calzado",
+    "subcat": "Botas",
+    "color": [
+      "Café"
+    ],
+    "ocasiones": [
+      "Social",
+      "Trabajo"
+    ]
+  },
+  "61bbb3a2-2ee0-47bd-b3f9-2675b3076302": {
+    "cat": "Calzado",
+    "subcat": "Sandalias",
+    "color": [
+      "Café"
+    ],
+    "ocasiones": [
+      "Social",
+      "Hogar"
+    ]
+  },
+  "08215318-faff-4037-bee9-5bceb0af7747": {
+    "cat": "Calzado",
+    "subcat": "Sneakers",
+    "color": [
+      "Blanco"
+    ],
+    "ocasiones": [
+      "Social",
+      "Hogar"
+    ]
+  },
+  "a3e5af58-cc70-48b8-85f7-cd160ba95968": {
+    "cat": "Calzado",
+    "subcat": "Sandalias",
+    "color": [
+      "Negro"
+    ],
+    "ocasiones": [
+      "Social",
+      "Hogar"
+    ]
+  },
+  "30feae84-c7b1-4e72-8b42-0f7736d42cd5": {
+    "cat": "Calzado",
+    "subcat": "Botas",
+    "color": [
+      "Negro"
+    ],
+    "ocasiones": [
+      "Social",
+      "Trabajo"
+    ]
+  },
+  "30b6fd9b-d172-4d5d-a1c1-c36d23f769dd": {
+    "cat": "Calzado",
+    "subcat": "Sandalias",
+    "color": [
+      "Rosa"
+    ],
+    "ocasiones": [
+      "Social",
+      "Hogar"
+    ]
+  },
+  "49d3b29c-54b9-4cae-b918-504cf24ce128": {
+    "cat": "Calzado",
+    "subcat": "Botas",
+    "color": [
+      "Negro"
+    ],
+    "ocasiones": [
+      "Social",
+      "Trabajo"
+    ]
+  },
+  "e3c8e575-c5b8-4c4c-9f49-62b37b611b6b": {
+    "cat": "Entero",
+    "subcat": "Vestido",
+    "color": [
+      "Negro"
+    ],
+    "ocasiones": [
+      "Social",
+      "Fiesta",
+      "Formal"
+    ]
+  },
+  "e6a8b33f-279c-4072-8dba-229d94205e55": {
+    "cat": "Entero",
+    "subcat": "Vestido",
+    "color": [
+      "Azul Marino"
+    ],
+    "ocasiones": [
+      "Social",
+      "Trabajo"
+    ]
+  },
+  "4b8e5d41-3e12-4d2b-8634-e62e71d613ff": {
+    "cat": "Entero",
+    "subcat": "Vestido",
+    "color": [
+      "Rojo"
+    ],
+    "ocasiones": [
+      "Social",
+      "Fiesta"
+    ]
+  },
+  "cb61ac26-e7a5-42a6-8471-66f69a9ccd4d": {
+    "cat": "Entero",
+    "subcat": "Vestido",
+    "color": [
+      "Blanco"
+    ],
+    "ocasiones": [
+      "Social",
+      "Fiesta"
+    ]
+  },
+  "21059bce-cf86-4064-b9af-5dbbbc6e7593": {
+    "cat": "Entero",
+    "subcat": "Vestido",
+    "color": [
+      "Negro"
+    ],
+    "ocasiones": [
+      "Social",
+      "Fiesta"
+    ]
+  },
+  "334bc6ef-fc89-4226-90f3-dd63645ec845": {
+    "cat": "Entero",
+    "subcat": "Vestido",
+    "color": [
+      "Verde"
+    ],
+    "ocasiones": [
+      "Social",
+      "Fiesta"
+    ]
+  },
+  "f28fb711-b7bf-4d6e-9935-6970a311a14e": {
+    "cat": "Entero",
+    "subcat": "Vestido",
+    "color": [
+      "Azul Claro"
+    ],
+    "ocasiones": [
+      "Social",
+      "Hogar"
+    ]
+  },
+  "a283e901-d8da-4be1-91ae-2a3c94de48a2": {
+    "cat": "Accesorio",
+    "subcat": "Gorra",
+    "color": [
+      "Negro"
+    ],
+    "ocasiones": [
+      "Social",
+      "Hogar"
+    ]
+  },
+  "b6899eaa-fe32-4547-9217-05bbcb09c217": {
+    "cat": "Accesorio",
+    "subcat": "Gorra",
+    "color": [
+      "Azul Marino"
+    ],
+    "ocasiones": [
+      "Social",
+      "Hogar"
+    ]
+  },
+  "2d6afa47-fd6f-4b2b-9e51-010280547753": {
+    "cat": "Accesorio",
+    "subcat": "Gorra",
+    "color": [
+      "Blanco"
+    ],
+    "ocasiones": [
+      "Social",
+      "Hogar"
+    ]
+  },
+  "708af227-43ba-4e2b-b35b-652a13cd1c77": {
+    "cat": "Accesorio",
+    "subcat": "Gorra",
+    "color": [
+      "Rojo"
+    ],
+    "ocasiones": [
+      "Social",
+      "Hogar"
+    ]
+  },
+  "a9db59ad-5a9c-4c5d-9a5a-a8aed629cc23": {
+    "cat": "Accesorio",
+    "subcat": "Gorra",
+    "color": [
+      "Verde"
+    ],
+    "ocasiones": [
+      "Social",
+      "Hogar"
+    ]
+  }
+}

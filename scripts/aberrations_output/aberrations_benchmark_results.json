@@ -1,0 +1,199 @@
+[
+  {
+    "prenda": "Camiseta Burdeos",
+    "id": "ea7b6656-3f84-4eb3-9099-23e623fc1018",
+    "grid_path": "/Users/drago/Library/CloudStorage/GoogleDrive-dragodominguezfb@gmail.com/Mi unidad/Obsidian/UNIR/Semestre 3/Seminario de inovacion e inteligencia artificial/Entregables/3.Entregable 2/contexto/Clase 5/grid_aberraciones_camiseta_burdeos.png",
+    "variantes": [
+      {
+        "perturbacion": "Original (Control)",
+        "categoria_predicha": "Superior",
+        "subcategoria_predicha": "Camiseta",
+        "colores_predichos": [
+          "Burdeos"
+        ],
+        "climaClo": 0.15,
+        "latencia_s": 2.1826860904693604,
+        "correcto": true
+      },
+      {
+        "perturbacion": "Desenfoque (Blur r=6)",
+        "categoria_predicha": "Superior",
+        "subcategoria_predicha": "Camiseta",
+        "colores_predichos": [
+          "Burdeos"
+        ],
+        "climaClo": 0.15,
+        "latencia_s": 1.8214218616485596,
+        "correcto": true
+      },
+      {
+        "perturbacion": "Desaturación (0% Color)",
+        "categoria_predicha": "Superior",
+        "subcategoria_predicha": "Camiseta",
+        "colores_predichos": [
+          "Gris"
+        ],
+        "climaClo": 0.15,
+        "latencia_s": 2.1638920307159424,
+        "correcto": true
+      },
+      {
+        "perturbacion": "Hipersaturación (3.5x)",
+        "categoria_predicha": "Superior",
+        "subcategoria_predicha": "Camiseta",
+        "colores_predichos": [
+          "Rojo"
+        ],
+        "climaClo": 0.15,
+        "latencia_s": 2.0927138328552246,
+        "correcto": true
+      },
+      {
+        "perturbacion": "Aberración Cromática",
+        "categoria_predicha": "Superior",
+        "subcategoria_predicha": "Camiseta",
+        "colores_predichos": [
+          "Burdeos"
+        ],
+        "climaClo": 0.15,
+        "latencia_s": 2.026909828186035,
+        "correcto": true
+      },
+      {
+        "perturbacion": "Baja Luz (0.35x Brillo)",
+        "categoria_predicha": "Superior",
+        "subcategoria_predicha": "Camiseta",
+        "colores_predichos": [
+          "Burdeos"
+        ],
+        "climaClo": 0.15,
+        "latencia_s": 1.8294768333435059,
+        "correcto": true
+      },
+      {
+        "perturbacion": "Sobreexposición (1.85x)",
+        "categoria_predicha": "Superior",
+        "subcategoria_predicha": "Camiseta",
+        "colores_predichos": [
+          "Rosa"
+        ],
+        "climaClo": 0.15,
+        "latencia_s": 2.0162999629974365,
+        "correcto": true
+      },
+      {
+        "perturbacion": "Ruido Gaussiano (σ=35)",
+        "categoria_predicha": "Superior",
+        "subcategoria_predicha": "Camiseta",
+        "colores_predichos": [
+          "Burdeos"
+        ],
+        "climaClo": 0.15,
+        "latencia_s": 2.8150899410247803,
+        "correcto": true
+      }
+    ]
+  },
+  {
+    "prenda": "Pantalón Negro",
+    "id": "c995c900-693d-4dd6-8995-43f3051ec488",
+    "grid_path": "/Users/drago/Library/CloudStorage/GoogleDrive-dragodominguezfb@gmail.com/Mi unidad/Obsidian/UNIR/Semestre 3/Seminario de inovacion e inteligencia artificial/Entregables/3.Entregable 2/contexto/Clase 5/grid_aberraciones_pantalón_negro.png",
+    "variantes": [
+      {
+        "perturbacion": "Original (Control)",
+        "categoria_predicha": "Inferior",
+        "subcategoria_predicha": "Pantalón",
+        "colores_predichos": [
+          "Negro",
+          "Blanco"
+        ],
+        "climaClo": 0.25,
+        "latencia_s": 2.230515956878662,
+        "correcto": true
+      },
+      {
+        "perturbacion": "Desenfoque (Blur r=6)",
+        "categoria_predicha": "Inferior",
+        "subcategoria_predicha": "Joggers",
+        "colores_predichos": [
+          "Azul Marino",
+          "Blanco"
+        ],
+        "climaClo": 0.25,
+        "latencia_s": 2.346036911010742,
+        "correcto": true
+      },
+      {
+        "perturbacion": "Desaturación (0% Color)",
+        "categoria_predicha": "Inferior",
+        "subcategoria_predicha": "Joggers",
+        "colores_predichos": [
+          "Negro",
+          "Blanco"
+        ],
+        "climaClo": 0.25,
+        "latencia_s": 2.081498146057129,
+        "correcto": true
+      },
+      {
+        "perturbacion": "Hipersaturación (3.5x)",
+        "categoria_predicha": "Inferior",
+        "subcategoria_predicha": "Pantalón",
+        "colores_predichos": [
+          "Azul Marino",
+          "Blanco"
+        ],
+        "climaClo": 0.25,
+        "latencia_s": 2.118244171142578,
+        "correcto": true
+      },
+      {
+        "perturbacion": "Aberración Cromática",
+        "categoria_predicha": "Inferior",
+        "subcategoria_predicha": "Joggers",
+        "colores_predichos": [
+          "Negro"
+        ],
+        "climaClo": 0.25,
+        "latencia_s": 2.1189162731170654,
+        "correcto": true
+      },
+      {
+        "perturbacion": "Baja Luz (0.35x Brillo)",
+        "categoria_predicha": "Inferior",
+        "subcategoria_predicha": "Joggers",
+        "colores_predichos": [
+          "Azul Marino",
+          "Blanco"
+        ],
+        "climaClo": 0.25,
+        "latencia_s": 1.924131155014038,
+        "correcto": true
+      },
+      {
+        "perturbacion": "Sobreexposición (1.85x)",
+        "categoria_predicha": "Inferior",
+        "subcategoria_predicha": "Joggers",
+        "colores_predichos": [
+          "Azul Marino",
+          "Blanco"
+        ],
+        "climaClo": 0.25,
+        "latencia_s": 2.187822103500366,
+        "correcto": true
+      },
+      {
+        "perturbacion": "Ruido Gaussiano (σ=35)",
+        "categoria_predicha": "Inferior",
+        "subcategoria_predicha": "Pantalón",
+        "colores_predichos": [
+          "Azul Marino",
+          "Blanco"
+        ],
+        "climaClo": 0.25,
+        "latencia_s": 2.118880033493042,
+        "correcto": true
+      }
+    ]
+  }
+]

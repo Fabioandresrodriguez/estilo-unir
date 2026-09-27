@@ -28,7 +28,6 @@ const validGarmentData = {
     colores: ['Azul Claro'],
     estaciones: ['Primavera', 'Otoño'],
     estilo: ['Casual', 'Streetwear'],
-    talla: 'M',
     notas: 'Lavar por separado.'
   }
 };

@@ -1,0 +1,1001 @@
+openapi: 3.1.0
+info:
+  title: API Clóset Digital - Estilo
+  version: 1.0.0
+  description: |
+    Documentación completa de la API REST del sistema **Clóset Digital Estilo**.
+    
+    Esta API gestiona el catálogo de prendas, análisis visual inteligente con IA,
+    carga y procesamiento de imágenes (remoción de fondo y compresión), proxy de imágenes en S3,
+    motor de recomendaciones inteligentes de outfits según clima y ocasión,
+    y síntesis de voz interactiva (Text-to-Speech).
+  contact:
+    name: Equipo de Desarrollo Clóset Digital
+    url: https://github.com/drago-do/estilo
+servers:
+  - url: http://localhost:3001
+    description: Servidor de desarrollo local
+  - url: https://estilo.dragodo.cloud/
+    description: Servidor de producción
+
+tags:
+  - name: Sistema
+    description: Endpoints de diagnóstico y verificación de salud de la infraestructura.
+  - name: Prendas
+    description: Gestión del catálogo de prendas, consulta paginada y actualización de estados.
+  - name: Análisis Visual e IA
+    description: Reconocimiento inteligente de prendas mediante modelos de visión multimodal.
+  - name: Recomendaciones
+    description: Motor de recomendación de outfits basado en reglas climáticas y estilo asistido por IA.
+  - name: Multimedia & Almacenamiento
+    description: Carga con remoción de fondo, compresión, almacenamiento en AWS S3 y proxy de imágenes.
+  - name: Audio & TTS
+    description: Síntesis de voz interactiva para respuestas y justificaciones de outfits.
+
+paths:
+  # =========================================================================
+  # 1. SISTEMA / HEALTH CHECK
+  # =========================================================================
+  /api/db-check:
+    get:
+      summary: Verificar conexión con la base de datos
+      description: |
+        Comprueba el estado de conexión activa con la base de datos MongoDB.
+      operationId: checkDatabaseConnection
+      tags:
+        - Sistema
+      responses:
+        '200':
+          description: Conexión exitosa con MongoDB.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "connected"
+                  database:
+                    type: string
+                    example: "closet_digital"
+                  timestamp:
+                    type: string
+                    format: date-time
+                    example: "2026-09-23T20:30:00.000Z"
+                required:
+                  - status
+                  - database
+                  - timestamp
+        '500':
+          description: Error de conexión o estado desconectado de MongoDB.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "disconnected"
+                  state:
+                    type: integer
+                    description: "Código de estado readyState de Mongoose (0=disconnected, 2=connecting, 3=disconnecting)"
+                    example: 0
+                  error:
+                    type: string
+                    example: "Error connecting to MongoDB"
+                  timestamp:
+                    type: string
+                    format: date-time
+                    example: "2026-09-23T20:30:00.000Z"
+                required:
+                  - status
+                  - timestamp
+
+  # =========================================================================
+  # 2. PRENDAS
+  # =========================================================================
+  /api/prendas:
+    get:
+      summary: Listar prendas con filtros y paginación
+      description: |
+        Retorna la lista de prendas del guardarropa con paginación y filtros opcionales
+        por categoría, estado de disponibilidad y colores. Las URLs de las imágenes se
+        transforman automáticamente para resolverse a través del proxy interno `/api/proxy-image`.
+      operationId: getPrendas
+      tags:
+        - Prendas
+      parameters:
+        - name: categoria
+          in: query
+          required: false
+          description: Categoría principal de la prenda.
+          schema:
+            $ref: '#/components/schemas/CategoriaPrenda'
+        - name: estado
+          in: query
+          required: false
+          description: Estado de disponibilidad actual de la prenda.
+          schema:
+            $ref: '#/components/schemas/EstadoPrenda'
+        - name: colores
+          in: query
+          required: false
+          description: Lista de colores separados por coma (ej. `Negro,Blanco`).
+          schema:
+            type: string
+            example: "Negro,Azul Marino"
+        - name: page
+          in: query
+          required: false
+          description: Número de página (1-indexado).
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+            example: 1
+        - name: limit
+          in: query
+          required: false
+          description: Cantidad máxima de prendas por página.
+          schema:
+            type: integer
+            default: 24
+            minimum: 1
+            maximum: 100
+            example: 24
+      responses:
+        '200':
+          description: Lista paginada de prendas obtenida con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Prenda'
+                  pagination:
+                    type: object
+                    properties:
+                      currentPage:
+                        type: integer
+                        example: 1
+                      totalPages:
+                        type: integer
+                        example: 3
+                      totalItems:
+                        type: integer
+                        example: 54
+                    required:
+                      - currentPage
+                      - totalPages
+                      - totalItems
+                required:
+                  - data
+                  - pagination
+        '500':
+          description: Error interno del servidor al consultar prendas.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/prendas/{id}:
+    get:
+      summary: Obtener detalle de una prenda por ID
+      description: Retorna la información completa de una prenda identificada por su ID único de MongoDB.
+      operationId: getPrendaById
+      tags:
+        - Prendas
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID hexadecimal (ObjectId de MongoDB) de la prenda.
+          schema:
+            type: string
+            example: "6a2dbf675b44e5255749c65a"
+      responses:
+        '200':
+          description: Prenda encontrada exitosamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  prenda:
+                    $ref: '#/components/schemas/Prenda'
+                required:
+                  - success
+                  - prenda
+        '404':
+          description: La prenda no existe.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    patch:
+      summary: Actualizar estado de una prenda individual
+      description: Cambia el estado de disponibilidad de una prenda ('Disponible', 'Sucio', 'Lavandería').
+      operationId: updatePrendaEstado
+      tags:
+        - Prendas
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID hexadecimal de la prenda.
+          schema:
+            type: string
+            example: "6a2dbf675b44e5255749c65a"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                estado:
+                  $ref: '#/components/schemas/EstadoPrenda'
+              required:
+                - estado
+      responses:
+        '200':
+          description: Estado actualizado exitosamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  prenda:
+                    $ref: '#/components/schemas/Prenda'
+                required:
+                  - success
+                  - prenda
+        '400':
+          description: Estado no proporcionado o inválido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: La prenda con el ID especificado no existe.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/prendas/bulk-status:
+    patch:
+      summary: Actualización masiva de estado para múltiples prendas
+      description: |
+        Modifica en una sola operación el estado de disponibilidad para un lote de prendas
+        indicado mediante su lista de IDs.
+      operationId: bulkUpdatePrendasEstado
+      tags:
+        - Prendas
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: string
+                  description: Arreglo de IDs de prendas a actualizar.
+                  example: ["6a2dbf675b44e5255749c65a", "6a2dbf675b44e5255749c658"]
+                estado:
+                  $ref: '#/components/schemas/EstadoPrenda'
+              required:
+                - ids
+                - estado
+      responses:
+        '200':
+          description: Estado de las prendas actualizado en lote con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  modifiedCount:
+                    type: integer
+                    description: Cantidad de prendas efectivamente modificadas.
+                    example: 2
+                  message:
+                    type: string
+                    example: "Se cambiaron 2 prendas al estado 'Disponible' con éxito."
+                required:
+                  - success
+                  - modifiedCount
+                  - message
+        '400':
+          description: Arreglo de IDs vacío o estado inválido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # =========================================================================
+  # 3. ANÁLISIS VISUAL E INTELIGENCIA ARTIFICIAL
+  # =========================================================================
+  /api/prendas/analyze-image:
+    post:
+      summary: Análisis visual inteligente de imagen de prenda
+      description: |
+        Recibe una imagen (en formato base64 o Data URI) y utiliza un modelo multimodal de IA
+        (Gemini 2.5 Flash a través de OpenRouter) para extraer y estructurar automáticamente
+        los metadatos de la prenda: nombre comercial sugerido, categoría, subcategoría compatible,
+        paleta de colores normalizada, estaciones, estilos, aislamiento térmico (climaClo),
+        impermeabilidad, posición de capa, rol en armario cápsula y ocasiones de uso.
+      operationId: analyzePrendaImage
+      tags:
+        - Análisis Visual e IA
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  description: Cadena base64 o data URL completa (`data:image/jpeg;base64,...`) de la fotografía de la prenda.
+                  example: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD..."
+              required:
+                - image
+      responses:
+        '200':
+          description: Análisis y normalización de metadatos completados satisfactoriamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AIAnalysisResult'
+        '400':
+          description: Parámetro de imagen faltante o no válido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Error del proveedor de IA o fallo interno de procesamiento.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # =========================================================================
+  # 4. RECOMENDACIONES DE OUTFITS
+  # =========================================================================
+  /api/recomendaciones:
+    post:
+      summary: Generar recomendaciones de outfits según contexto climático y ocasión
+      description: |
+        Ejecuta el motor de recomendación en dos etapas:
+        1. **Filtro determinista:** Evalúa las prendas disponibles en el inventario, verificando combinaciones mínimas viables y reglas de lluvia/impermeabilidad y temperatura (climaClo).
+        2. **Composición con IA:** Genera 3 combinaciones de outfits personalizadas con la regla estética de proporción de color 60-30-10 y redacta una justificación estilística para cada conjunto.
+      operationId: generarRecomendaciones
+      tags:
+        - Recomendaciones
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                temperatura:
+                  type: number
+                  description: Temperatura ambiente en grados Celsius (°C).
+                  example: 22.5
+                lluvia:
+                  type: boolean
+                  description: Indica si hay presencia o alta probabilidad de lluvia. También acepta porcentaje numérico.
+                  example: false
+                ocasion:
+                  type: string
+                  description: Ocasión o evento destino para el outfit.
+                  enum:
+                    - Trabajo
+                    - Deporte
+                    - Social
+                    - Formal
+                    - Hogar
+                    - Playa
+                  example: "Social"
+              required:
+                - temperatura
+                - lluvia
+                - ocasion
+      responses:
+        '200':
+          description: Conjuntos sugeridos generados con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Recomendaciones generadas exitosamente."
+                  outfits:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/OutfitSugerido'
+                required:
+                  - message
+                  - outfits
+        '400':
+          description: Faltan variables requeridas (temperatura, lluvia u ocasión).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Inventario insuficiente de prendas disponibles para formar al menos 2 combinaciones completas.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "No hay suficientes prendas disponibles para crear al menos 2 combinaciones. Por favor, lava tu ropa o registra más prendas en tu clóset."
+                  insuficiente:
+                    type: boolean
+                    example: true
+                required:
+                  - error
+                  - insuficiente
+        '500':
+          description: Error interno al procesar las recomendaciones.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # =========================================================================
+  # 5. MULTIMEDIA & ALMACENAMIENTO (UPLOAD & PROXY)
+  # =========================================================================
+  /api/upload:
+    post:
+      summary: Subir y procesar imágenes de prendas a AWS S3
+      description: |
+        Pipeline completo de procesamiento de imágenes:
+        1. Valida formato (JPG, PNG, WEBP) y tamaño (máximo 10 MB por archivo).
+        2. Remueve el fondo automáticamente aislando la prenda.
+        3. Comprime la imagen preservando el canal alfa (transparencia).
+        4. Almacena el resultado optimizado en el bucket de AWS S3 y retorna las URLs finales.
+      operationId: uploadPrendaImages
+      tags:
+        - Multimedia & Almacenamiento
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                files:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                  description: Uno o varios archivos de imagen de la prenda (máximo 10MB c/u).
+                categoria:
+                  type: string
+                  description: Categoría o carpeta lógica de destino (ej. 'Superior', 'Inferior', etc.).
+                  default: "varios"
+                  example: "Superior"
+              required:
+                - files
+      responses:
+        '200':
+          description: Imágenes procesadas y almacenadas exitosamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  urls:
+                    type: array
+                    items:
+                      type: string
+                      format: uri
+                    description: Lista de URLs públicas/S3 de las imágenes subidas.
+                    example:
+                      - "https://closet-digital-bucket.s3.us-east-1.amazonaws.com/prendas/Superior/1727123456_camiseta.webp"
+                required:
+                  - urls
+        '400':
+          description: Archivo no enviado, formato no soportado o tamaño superior a 10MB.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Error interno o credenciales de AWS S3 incompletas.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/proxy-image:
+    get:
+      summary: Proxy seguro y cacheado de imágenes
+      description: |
+        Descarga y sirve imágenes alojadas en AWS S3 (utilizando credenciales seguras del servidor)
+        o desde URLs externas (como Unsplash), previniendo errores de CORS en el frontend y aplicando
+        políticas agresivas de caché en el navegador (`Cache-Control: immutable, max-age=31536000`).
+      operationId: proxyImage
+      tags:
+        - Multimedia & Almacenamiento
+      parameters:
+        - name: url
+          in: query
+          required: true
+          description: URL codificada de la imagen origen que se desea recuperar.
+          schema:
+            type: string
+            format: uri
+            example: "https://closet-digital-bucket.s3.us-east-1.amazonaws.com/prendas/foto.webp"
+      responses:
+        '200':
+          description: Flujo binario de la imagen solicitada con encabezados de caché.
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: "image/webp"
+            Cache-Control:
+              schema:
+                type: string
+                example: "public, max-age=31536000, immutable"
+          content:
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+            image/png:
+              schema:
+                type: string
+                format: binary
+            image/webp:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Parámetro `url` ausente.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "URL parameter is required"
+        '500':
+          description: Error interno al recuperar el recurso de imagen.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Internal Server Error"
+
+  # =========================================================================
+  # 6. SÍNTESIS DE VOZ (TTS)
+  # =========================================================================
+  /api/tts:
+    post:
+      summary: Síntesis de voz (Text-to-Speech)
+      description: |
+        Genera un stream binario de audio hablado a partir de una cadena de texto,
+        utilizando modelos de síntesis de voz (Qwen Audio TTS vía OpenRouter).
+        Ideal para reproducir en voz alta justificaciones de outfits y feedback del asistente.
+      operationId: synthesizeSpeech
+      tags:
+        - Audio & TTS
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                input:
+                  type: string
+                  description: Texto que será sintetizado en audio.
+                  example: "Este outfit es ideal para una ocasión social casual con 22 grados centígrados."
+                text:
+                  type: string
+                  description: Alias alternativo para el campo `input`.
+                  example: "Este outfit es ideal para una ocasión social casual con 22 grados centígrados."
+                voice:
+                  type: string
+                  description: Identificador de la voz a utilizar.
+                  default: "loongjohn"
+                  example: "loongjohn"
+                response_format:
+                  type: string
+                  description: Formato de codificación de audio resultante.
+                  enum:
+                    - mp3
+                    - pcm
+                  default: "mp3"
+                  example: "mp3"
+              anyOf:
+                - required: [input]
+                - required: [text]
+      responses:
+        '200':
+          description: Audio binario generado exitosamente.
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: "audio/mpeg"
+            Cache-Control:
+              schema:
+                type: string
+                example: "public, max-age=86400, immutable"
+          content:
+            audio/mpeg:
+              schema:
+                type: string
+                format: binary
+            audio/pcm:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Texto obligatorio no proporcionado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Error del servicio TTS o configuración ausente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+# =============================================================================
+# COMPONENTES Y ESQUEMAS
+# =============================================================================
+components:
+  schemas:
+    # -------------------------------------------------------------------------
+    # Enums del Dominio
+    # -------------------------------------------------------------------------
+    EstadoPrenda:
+      type: string
+      description: Estado de disponibilidad física de la prenda.
+      enum:
+        - Disponible
+        - Sucio
+        - Lavandería
+      example: "Disponible"
+
+    CategoriaPrenda:
+      type: string
+      description: Clasificación principal de la prenda en el guardarropa.
+      enum:
+        - Superior
+        - Inferior
+        - Entero
+        - Calzado
+        - Accesorios
+      example: "Superior"
+
+    SubcategoriaPrenda:
+      type: string
+      description: |
+        Subcategoría específica de la prenda. Debe corresponder a la categoría elegida:
+        - **Superior:** `Camiseta`, `Camisa`, `Hoodie`, `Chamarra`, `Suéter`, `Top`
+        - **Inferior:** `Jeans`, `Pantalón`, `Shorts`, `Cargo`, `Joggers`, `Falda`
+        - **Entero:** `Vestido`, `Mono`, `Overol`
+        - **Calzado:** `Sneakers`, `Botas`, `Zapatos Formales`, `Sandalias`
+        - **Accesorios:** `Gorra`, `Bufanda`, `Cinturón`, `Lentes`, `Mochila`, `Bolso`
+      enum:
+        - Camiseta
+        - Camisa
+        - Hoodie
+        - Chamarra
+        - Suéter
+        - Top
+        - Jeans
+        - Pantalón
+        - Shorts
+        - Cargo
+        - Joggers
+        - Falda
+        - Vestido
+        - Mono
+        - Overol
+        - Sneakers
+        - Botas
+        - Zapatos Formales
+        - Sandalias
+        - Gorra
+        - Bufanda
+        - Cinturón
+        - Lentes
+        - Mochila
+        - Bolso
+      example: "Camiseta"
+
+    ColorBase:
+      type: string
+      description: Colores estandarizados reconocidos por el sistema.
+      enum:
+        - Negro
+        - Blanco
+        - Gris
+        - Azul Marino
+        - Azul Claro
+        - Beige
+        - Café
+        - Verde Oliva
+        - Burdeos
+        - Rojo
+        - Amarillo
+        - Verde
+        - Rosa
+      example: "Negro"
+
+    EstacionClima:
+      type: string
+      description: Estación del año recomendada para el uso de la prenda.
+      enum:
+        - Primavera
+        - Verano
+        - Otoño
+        - Invierno
+        - Todo el año
+      example: "Primavera"
+
+    EstiloPrenda:
+      type: string
+      description: Estilo o estética de diseño de la prenda.
+      enum:
+        - Casual
+        - Formal
+        - Deportivo
+        - Streetwear
+        - Oficina
+        - Fiesta
+      example: "Streetwear"
+
+    ImpermeabilidadPrenda:
+      type: string
+      description: Nivel de resistencia al agua y protección climática.
+      enum:
+        - Sin Proteccion
+        - Repelente
+        - Impermeable
+      example: "Repelente"
+
+    CapaPosicionPrenda:
+      type: string
+      description: Posición de capas en el sistema de vestimenta por capas (layering).
+      enum:
+        - Interior
+        - Media
+        - Exterior
+        - Única
+      example: "Exterior"
+
+    RolCapsulaPrenda:
+      type: string
+      description: Función de la prenda dentro de la metodología de armario cápsula.
+      enum:
+        - Esencial Neutro
+        - Pieza de Acento
+        - Declaración
+      example: "Esencial Neutro"
+
+    OcasionPrenda:
+      type: string
+      description: Contextos de uso y etiqueta recomendados.
+      enum:
+        - Trabajo
+        - Deporte
+        - Social
+        - Formal
+        - Hogar
+        - Playa
+      example: "Social"
+
+    # -------------------------------------------------------------------------
+    # Estructuras de Datos
+    # -------------------------------------------------------------------------
+    MetadataPrenda:
+      type: object
+      description: Metadatos detallados y atributos de estilo de la prenda.
+      properties:
+        categoria:
+          $ref: '#/components/schemas/CategoriaPrenda'
+        subcategoria:
+          $ref: '#/components/schemas/SubcategoriaPrenda'
+        colores:
+          type: array
+          items:
+            $ref: '#/components/schemas/ColorBase'
+          minItems: 1
+          maxItems: 3
+          example: ["Negro", "Blanco"]
+        estaciones:
+          type: array
+          items:
+            $ref: '#/components/schemas/EstacionClima'
+          minItems: 1
+          example: ["Primavera", "Otoño"]
+        estilo:
+          type: array
+          items:
+            $ref: '#/components/schemas/EstiloPrenda'
+          minItems: 1
+          example: ["Casual", "Streetwear"]
+        notas:
+          type: string
+          maxLength: 300
+          nullable: true
+          example: "Prenda de algodón suave, ajuste holgado."
+        climaClo:
+          type: number
+          format: float
+          minimum: 0.0
+          maximum: 2.0
+          nullable: true
+          description: Nivel de aislamiento térmico de la prenda (0.0 = muy fresco, 2.0 = abrigo polar).
+          example: 0.25
+        impermeabilidad:
+          $ref: '#/components/schemas/ImpermeabilidadPrenda'
+          nullable: true
+        capaPosicion:
+          $ref: '#/components/schemas/CapaPosicionPrenda'
+          nullable: true
+        rolCapsula:
+          $ref: '#/components/schemas/RolCapsulaPrenda'
+          nullable: true
+        ocasiones:
+          type: array
+          items:
+            $ref: '#/components/schemas/OcasionPrenda'
+          nullable: true
+          example: ["Social", "Trabajo"]
+        texturaMaterial:
+          type: string
+          nullable: true
+          description: Descripción corta del material y textura observada.
+          example: "Algodón peinado ligero"
+      required:
+        - categoria
+        - subcategoria
+        - colores
+        - estaciones
+        - estilo
+
+    Prenda:
+      type: object
+      description: Entidad completa de una prenda almacenada en la base de datos.
+      properties:
+        _id:
+          type: string
+          description: Identificador único de MongoDB.
+          example: "6a2dbf675b44e5255749c65a"
+        nombre:
+          type: string
+          minLength: 3
+          maxLength: 80
+          description: Nombre descriptivo de la prenda.
+          example: "Camiseta Básica de Algodón Blanca"
+        imagenes:
+          type: array
+          items:
+            type: string
+          minItems: 1
+          maxItems: 4
+          description: Lista de URLs de fotografías de la prenda.
+          example:
+            - "/api/proxy-image?url=https%3A%2F%2Fcloset-digital-bucket.s3.amazonaws.com%2Ffoto.webp"
+        estado:
+          $ref: '#/components/schemas/EstadoPrenda'
+        metadata:
+          $ref: '#/components/schemas/MetadataPrenda'
+        createdAt:
+          type: string
+          format: date-time
+          example: "2026-09-20T10:00:00.000Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2026-09-20T10:00:00.000Z"
+      required:
+        - _id
+        - nombre
+        - imagenes
+        - estado
+        - metadata
+
+    AIAnalysisResult:
+      type: object
+      description: Resultado del análisis visual multimodal devuelto por la IA.
+      properties:
+        nombre:
+          type: string
+          example: "Sudadera Básica Gris con Gorro"
+        metadata:
+          $ref: '#/components/schemas/MetadataPrenda'
+      required:
+        - nombre
+        - metadata
+
+    OutfitSugerido:
+      type: object
+      description: Propuesta de outfit compuesta por el motor de recomendaciones.
+      properties:
+        nombre:
+          type: string
+          description: Título conceptual o estilístico del outfit.
+          example: "Casual Urbano con Toque de Color"
+        prendas:
+          type: array
+          items:
+            type: string
+          minItems: 2
+          maxItems: 5
+          description: Lista de IDs de las prendas que componen el outfit.
+          example:
+            - "6a2dbf675b44e5255749c65a"
+            - "6a2dbf675b44e5255749c658"
+            - "6a2dbf675b44e5255749c65b"
+            - "6a2dbf675b44e5255749c664"
+        justificacionEstilo:
+          type: string
+          description: Explicación estilística fundamentada en armonía cromática (60-30-10) y condiciones climáticas.
+          example: "Este outfit es ideal para una ocasión social casual con 22°C. Los Cargo Pants Verde Oliva (60%) establecen la base neutra y cómoda. La Camiseta Básica Blanca (30%) complementa la base y mantiene la frescura. Los Sneakers Retro Blancos y la Gorra Negra (10%) añaden el acento urbano."
+      required:
+        - nombre
+        - prendas
+        - justificacionEstilo
+
+    ErrorResponse:
+      type: object
+      description: Estructura estándar de mensaje de error.
+      properties:
+        error:
+          type: string
+          description: Descripción del error ocurrido.
+          example: "Mensaje descriptivo del error."
+      required:
+        - error

@@ -1,0 +1,805 @@
+{
+  "total_escenarios": 14,
+  "total_outfits": 39,
+  "tasa_disponibilidad": 100.0,
+  "latencia_promedio_s": 2.8526394367218018,
+  "detalles": [
+    {
+      "escenario": "Frío Extremo / Trabajo",
+      "parametros": {
+        "temperatura": 4,
+        "lluvia": false,
+        "ocasion": "Trabajo",
+        "label": "Frío Extremo / Trabajo"
+      },
+      "outfits_generados": 3,
+      "disponibilidad_valida": true,
+      "latencia_s": 3.0423049926757812,
+      "outfits": [
+        {
+          "nombre": "Estilo Formal y Calientito para la Oficina",
+          "prendas_ids": [
+            "6aa4b6a553364dbdb054e193",
+            "6aa4b82253364dbdb054e1a4",
+            "6aa4b7d953364dbdb054e1a1",
+            "6aa4b67c53364dbdb054e192"
+          ],
+          "prendas_nombres": [
+            "Suéter de Cuello Alto Beige de Lana Trenzada",
+            "Pantalón Chino Beige Slim Fit",
+            "Zapatos Oxford Negros con Tachuelas",
+            "Chamarra Acolchada Beige de Cuello Alto"
+          ],
+          "disponibles": true,
+          "justificacion": "Este look es súper elegante y calentito. El suéter beige combina perfecto con el pantalón chino para un día de oficina, y la chamarra te mantendrá abrigada del frío. ¡Los zapatos negros le dan un toque chic!"
+        },
+        {
+          "nombre": "Look Casual-Formal con un Toque Beige",
+          "prendas_ids": [
+            "6aa4b7f153364dbdb054e1a2",
+            "6aa4b6a553364dbdb054e193",
+            "6aa4b82253364dbdb054e1a4"
+          ],
+          "prendas_nombres": [
+            "Chamarra Tejida Gruesa Negra con Botones y Bolsillos",
+            "Suéter de Cuello Alto Beige de Lana Trenzada",
+            "Pantalón Chino Beige Slim Fit"
+          ],
+          "disponibles": true,
+          "justificacion": "¡Me encanta esta combinación! La chamarra tejida negra sobre el suéter beige se ve muy sofisticada, y los pantalones chinos son ideales para un día en la oficina. Te verás muy profesional y cómoda."
+        },
+        {
+          "nombre": "Elegancia Casual con Acentos Marinos",
+          "prendas_ids": [
+            "6aa4b7ae53364dbdb054e19f",
+            "6aa4b82253364dbdb054e1a4",
+            "6aa4b7d953364dbdb054e1a1",
+            "6aa4b89e53364dbdb054e1aa"
+          ],
+          "prendas_nombres": [
+            "Sudadera de rayas Azul Marino, Azul Claro y Blanco con cuello alto",
+            "Pantalón Chino Beige Slim Fit",
+            "Zapatos Oxford Negros con Tachuelas",
+            "Chamarra Ligera Azul Marino Acolchada"
+          ],
+          "disponibles": true,
+          "justificacion": "Este outfit es súper fresco y a la vez elegante. La sudadera a rayas le da un toque casual, pero con los pantalones beige y los zapatos Oxford, ¡estás lista para el trabajo! La chamarra acolchada te protegerá del frío sin perder el estilo."
+        }
+      ]
+    },
+    {
+      "escenario": "Frío Lluvioso / Social",
+      "parametros": {
+        "temperatura": 7,
+        "lluvia": true,
+        "ocasion": "Social",
+        "label": "Frío Lluvioso / Social"
+      },
+      "outfits_generados": 2,
+      "disponibilidad_valida": true,
+      "latencia_s": 2.450761079788208,
+      "outfits": [
+        {
+          "nombre": "Estilo Urbano con Chaqueta Impermeable",
+          "prendas_ids": [
+            "6aa4b85d53364dbdb054e1a7",
+            "6aa4b5ac53364dbdb054e18a",
+            "6aa4b89e53364dbdb054e1aa",
+            "6aa4b88253364dbdb054e1a9"
+          ],
+          "prendas_nombres": [
+            "Camiseta Manga Larga Azul Marino con Estampado Blanco",
+            "Jeans Clásicos Azul Marino para Niño",
+            "Chamarra Ligera Azul Marino Acolchada",
+            "Botas Negras de Tacón Grueso con Cordones y Detalles Dorados"
+          ],
+          "disponibles": true,
+          "justificacion": "¡Este look es perfecto para la lluvia! La chamarra te mantendrá seca y abrigada, y el toque azul marino combina súper bien con las botas negras. ¡Un look casual y práctico!"
+        },
+        {
+          "nombre": "Casual Chic para Día Frío",
+          "prendas_ids": [
+            "6aa4b6a553364dbdb054e193",
+            "6aa4b56253364dbdb054e187",
+            "6aa4b62553364dbdb054e190",
+            "6aa4b7f153364dbdb054e1a2"
+          ],
+          "prendas_nombres": [
+            "Suéter de Cuello Alto Beige de Lana Trenzada",
+            "Falda Lápiz Negra de Cuero Sintético con Cremallera Frontal",
+            "Suéter de Rayas Rosa y Azul Marino",
+            "Chamarra Tejida Gruesa Negra con Botones y Bolsillos"
+          ],
+          "disponibles": true,
+          "justificacion": "Con este suéter calentito y la falda lápiz, te verás muy chic. Las botas te darán un toque extra y la chamarra te protegerá del frío, ¡lista para todo!"
+        }
+      ]
+    },
+    {
+      "escenario": "Frío / Formal",
+      "parametros": {
+        "temperatura": 9,
+        "lluvia": false,
+        "ocasion": "Formal",
+        "label": "Frío / Formal"
+      },
+      "outfits_generados": 3,
+      "disponibilidad_valida": true,
+      "latencia_s": 2.9010472297668457,
+      "outfits": [
+        {
+          "nombre": "Elegancia Formal con Toque Clásico",
+          "prendas_ids": [
+            "6aa4b6a553364dbdb054e193",
+            "6aa4b56253364dbdb054e187",
+            "6aa4b7d953364dbdb054e1a1"
+          ],
+          "prendas_nombres": [
+            "Suéter de Cuello Alto Beige de Lana Trenzada",
+            "Falda Lápiz Negra de Cuero Sintético con Cremallera Frontal",
+            "Zapatos Oxford Negros con Tachuelas"
+          ],
+          "disponibles": true,
+          "justificacion": "Este look es súper sofisticado y perfecto para un evento formal. El suéter beige te mantendrá calentita y la falda lápiz negra es muy chic. Los zapatos Oxford le dan un toque clásico ideal."
+        },
+        {
+          "nombre": "Formal y Cálido con Estilo",
+          "prendas_ids": [
+            "6aa4b6a553364dbdb054e193",
+            "6aa4b82253364dbdb054e1a4",
+            "6aa4b7d953364dbdb054e1a1"
+          ],
+          "prendas_nombres": [
+            "Suéter de Cuello Alto Beige de Lana Trenzada",
+            "Pantalón Chino Beige Slim Fit",
+            "Zapatos Oxford Negros con Tachuelas"
+          ],
+          "disponibles": true,
+          "justificacion": "¡Este outfit te hará lucir genial y cómoda! El suéter de lana es ideal para el frío y los pantalones chinos beige combinan súper bien. Los zapatos negros le dan el toque formal que necesitas."
+        },
+        {
+          "nombre": "Sofisticación de Oficina para el Frío",
+          "prendas_ids": [
+            "6aa4b6a553364dbdb054e193",
+            "6aa4b56253364dbdb054e187",
+            "6aa4b78053364dbdb054e19d"
+          ],
+          "prendas_nombres": [
+            "Suéter de Cuello Alto Beige de Lana Trenzada",
+            "Falda Lápiz Negra de Cuero Sintético con Cremallera Frontal",
+            "Zapatos Formales Beige con Tacón Calado Floral"
+          ],
+          "disponibles": true,
+          "justificacion": "Este look es pura elegancia para un evento formal y además te abrigará. El suéter calentito y la falda lápiz negra se ven divinos, y los zapatos con tacón calado floral le dan un toque muy especial y femenino."
+        }
+      ]
+    },
+    {
+      "escenario": "Frío / Hogar",
+      "parametros": {
+        "temperatura": 10,
+        "lluvia": false,
+        "ocasion": "Hogar",
+        "label": "Frío / Hogar"
+      },
+      "outfits_generados": 3,
+      "disponibilidad_valida": true,
+      "latencia_s": 3.1462912559509277,
+      "outfits": [
+        {
+          "nombre": "Confort Casual para el Hogar",
+          "prendas_ids": [
+            "6aa4b6f653364dbdb054e197",
+            "6aa4b5f153364dbdb054e18d",
+            "6aa4b5cd53364dbdb054e18b"
+          ],
+          "prendas_nombres": [
+            "Sudadera Nike Gris con Capucha y Logo Grande",
+            "Pantalón Jogger Azul Marino con Rayas Laterales y Estampado 'KING'",
+            "Sneakers de Cuero Negro con Suela Blanca"
+          ],
+          "disponibles": true,
+          "justificacion": "Este look es súper cómodo para estar en casa. La sudadera gris es calentita y el jogger es perfecto para relajarte, ¡además las sneakers blancas combinan con todo!"
+        },
+        {
+          "nombre": "Relax Hogareño con un Toque de Estilo",
+          "prendas_ids": [
+            "6aa4b75553364dbdb054e19b",
+            "6aa4b5ac53364dbdb054e18a",
+            "6aa4b5cd53364dbdb054e18b"
+          ],
+          "prendas_nombres": [
+            "Camiseta Básica Gris con Estampado de Pug",
+            "Jeans Clásicos Azul Marino para Niño",
+            "Sneakers de Cuero Negro con Suela Blanca"
+          ],
+          "disponibles": true,
+          "justificacion": "Me encanta esta combinación. La camiseta con el estampado de pug le da un toque divertido a los jeans clásicos. Con las sneakers, este look es ideal para un día relajado en casa."
+        },
+        {
+          "nombre": "Acogedor y Moderno para el Hogar",
+          "prendas_ids": [
+            "6aa4b62553364dbdb054e190",
+            "6aa4b5ac53364dbdb054e18a",
+            "6aa4b64a53364dbdb054e191"
+          ],
+          "prendas_nombres": [
+            "Suéter de Rayas Rosa y Azul Marino",
+            "Jeans Clásicos Azul Marino para Niño",
+            "Sneakers Metalizados Gris Oscuro"
+          ],
+          "disponibles": true,
+          "justificacion": "El suéter de rayas es tan lindo y calentito, perfecto para el clima. Con los jeans clásicos y las sneakers metalizadas, te verás súper cool y cómoda sin esfuerzo."
+        }
+      ]
+    },
+    {
+      "escenario": "Fresco / Trabajo",
+      "parametros": {
+        "temperatura": 12,
+        "lluvia": false,
+        "ocasion": "Trabajo",
+        "label": "Fresco / Trabajo"
+      },
+      "outfits_generados": 3,
+      "disponibilidad_valida": true,
+      "latencia_s": 3.0802218914031982,
+      "outfits": [
+        {
+          "nombre": "Estilo Formal de Oficina",
+          "prendas_ids": [
+            "6aa4b6a553364dbdb054e193",
+            "6aa4b56253364dbdb054e187",
+            "6aa4b7d953364dbdb054e1a1"
+          ],
+          "prendas_nombres": [
+            "Suéter de Cuello Alto Beige de Lana Trenzada",
+            "Falda Lápiz Negra de Cuero Sintético con Cremallera Frontal",
+            "Zapatos Oxford Negros con Tachuelas"
+          ],
+          "disponibles": true,
+          "justificacion": "Este look combina lo formal con un toque moderno. La falda negra de cuero sintético y el suéter beige de lana hacen una base super elegante, ¡y los zapatos Oxford con tachuelas le dan un twist muy chic! Perfecto para la oficina y estar cómoda."
+        },
+        {
+          "nombre": "Casual Chic para Trabajar",
+          "prendas_ids": [
+            "6aa4b6a553364dbdb054e193",
+            "6aa4b82253364dbdb054e1a4",
+            "6aa4b5cd53364dbdb054e18b"
+          ],
+          "prendas_nombres": [
+            "Suéter de Cuello Alto Beige de Lana Trenzada",
+            "Pantalón Chino Beige Slim Fit",
+            "Sneakers de Cuero Negro con Suela Blanca"
+          ],
+          "disponibles": true,
+          "justificacion": "Aquí tienes un look súper cómodo y elegante para tu día. El pantalón chino beige y el suéter de cuello alto beige se ven divinos juntos, ¡y los sneakers negros le dan el toque casual perfecto! Ideal para un día activo en el trabajo."
+        },
+        {
+          "nombre": "Elegancia Invernal",
+          "prendas_ids": [
+            "6aa4b67c53364dbdb054e192",
+            "6aa4b82253364dbdb054e1a4",
+            "6aa4b7d953364dbdb054e1a1"
+          ],
+          "prendas_nombres": [
+            "Chamarra Acolchada Beige de Cuello Alto",
+            "Pantalón Chino Beige Slim Fit",
+            "Zapatos Oxford Negros con Tachuelas"
+          ],
+          "disponibles": true,
+          "justificacion": "¡Este outfit es perfecto para el frío! La chamarra acolchada beige te mantendrá calentita y se ve muy sofisticada. Combínala con el pantalón chino beige y los zapatos Oxford negros para un look muy pulido y cómodo."
+        }
+      ]
+    },
+    {
+      "escenario": "Fresco Lluvia / Hogar",
+      "parametros": {
+        "temperatura": 15,
+        "lluvia": true,
+        "ocasion": "Hogar",
+        "label": "Fresco Lluvia / Hogar"
+      },
+      "outfits_generados": 3,
+      "disponibilidad_valida": true,
+      "latencia_s": 3.155776023864746,
+      "outfits": [
+        {
+          "nombre": "Acogedor para un día de lluvia en casa",
+          "prendas_ids": [
+            "6aa4b7f153364dbdb054e1a2",
+            "6aa4b75553364dbdb054e19b",
+            "6aa4b5cd53364dbdb054e18b",
+            "6aa4b5f153364dbdb054e18d"
+          ],
+          "prendas_nombres": [
+            "Chamarra Tejida Gruesa Negra con Botones y Bolsillos",
+            "Camiseta Básica Gris con Estampado de Pug",
+            "Sneakers de Cuero Negro con Suela Blanca",
+            "Pantalón Jogger Azul Marino con Rayas Laterales y Estampado 'KING'"
+          ],
+          "disponibles": true,
+          "justificacion": "Este look es perfecto para quedarte en casa cuando llueve. La chaqueta te mantendrá calentita, la camiseta y los joggers son súper cómodos y las sneakers repelen el agua. ¡Estás lista para todo!"
+        },
+        {
+          "nombre": "Casual y cálido para estar en casa",
+          "prendas_ids": [
+            "6aa4b6a553364dbdb054e193",
+            "6aa4b5ac53364dbdb054e18a",
+            "6aa4b88253364dbdb054e1a9",
+            "6aa4b73553364dbdb054e19a"
+          ],
+          "prendas_nombres": [
+            "Suéter de Cuello Alto Beige de Lana Trenzada",
+            "Jeans Clásicos Azul Marino para Niño",
+            "Botas Negras de Tacón Grueso con Cordones y Detalles Dorados",
+            "Gorro Beanie Beige Básico"
+          ],
+          "disponibles": true,
+          "justificacion": "Me encanta esta combinación para un día fresco y lluvioso en casa. El suéter es súper comfy, los jeans son clásicos y las botas son ideales para la lluvia. El gorro le da un toque extra muy mono."
+        },
+        {
+          "nombre": "Relajado y protegido de la lluvia",
+          "prendas_ids": [
+            "6aa4b89e53364dbdb054e1aa",
+            "6aa4b87053364dbdb054e1a8",
+            "6aa4b85d53364dbdb054e1a7",
+            "6aa4b64a53364dbdb054e191"
+          ],
+          "prendas_nombres": [
+            "Chamarra Ligera Azul Marino Acolchada",
+            "Jeans Claros Desgastados",
+            "Camiseta Manga Larga Azul Marino con Estampado Blanco",
+            "Sneakers Metalizados Gris Oscuro"
+          ],
+          "disponibles": true,
+          "justificacion": "Este outfit es ideal para estar cómoda en casa mientras llueve. La chaqueta te protege del frío, los jeans y la camiseta son muy versátiles y las sneakers le dan un toque chic para un día relajado."
+        }
+      ]
+    },
+    {
+      "escenario": "Templado / Social",
+      "parametros": {
+        "temperatura": 16,
+        "lluvia": false,
+        "ocasion": "Social",
+        "label": "Templado / Social"
+      },
+      "outfits_generados": 3,
+      "disponibilidad_valida": true,
+      "latencia_s": 3.062653064727783,
+      "outfits": [
+        {
+          "nombre": "Estilo Casual Chic con un Toque Divertido",
+          "prendas_ids": [
+            "6aa4b75553364dbdb054e19b",
+            "6aa4b56253364dbdb054e187",
+            "6aa4b5cd53364dbdb054e18b"
+          ],
+          "prendas_nombres": [
+            "Camiseta Básica Gris con Estampado de Pug",
+            "Falda Lápiz Negra de Cuero Sintético con Cremallera Frontal",
+            "Sneakers de Cuero Negro con Suela Blanca"
+          ],
+          "disponibles": true,
+          "justificacion": "Este look combina lo casual de la camiseta con el toque chic de la falda de cuero. Las zapatillas le dan un aire moderno y súper cómodo, ¡ideal para salir con amigas!"
+        },
+        {
+          "nombre": "Comodidad con Rayas y Estilo Urbano",
+          "prendas_ids": [
+            "6aa4b7ae53364dbdb054e19f",
+            "6aa4b5ac53364dbdb054e18a",
+            "6aa4b5cd53364dbdb054e18b"
+          ],
+          "prendas_nombres": [
+            "Sudadera de rayas Azul Marino, Azul Claro y Blanco con cuello alto",
+            "Jeans Clásicos Azul Marino para Niño",
+            "Sneakers de Cuero Negro con Suela Blanca"
+          ],
+          "disponibles": true,
+          "justificacion": "La sudadera de rayas con los jeans crea un look relajado pero con mucho estilo. Las zapatillas negras combinan perfecto y hacen que sea un outfit súper versátil para cualquier plan casual."
+        },
+        {
+          "nombre": "Vibrante y Juguetón con un Toque Urbano",
+          "prendas_ids": [
+            "6aa4b5e253364dbdb054e18c",
+            "6aa4b5ac53364dbdb054e18a",
+            "6aa4b57553364dbdb054e188"
+          ],
+          "prendas_nombres": [
+            "Camiseta Roja Estampada Deportiva 'Red Machine'",
+            "Jeans Clásicos Azul Marino para Niño",
+            "Zapatillas Tejidas Amarillas con Diseño de Monstruo"
+          ],
+          "disponibles": true,
+          "justificacion": "La camiseta roja le da un toque de color muy divertido a los jeans, ¡se ve increíble! Y las zapatillas amarillas son el acento perfecto para un look lleno de energía. ¡Este outfit está perfecto para una salida con mucha onda!"
+        }
+      ]
+    },
+    {
+      "escenario": "Templado / Fiesta",
+      "parametros": {
+        "temperatura": 18,
+        "lluvia": false,
+        "ocasion": "Fiesta",
+        "label": "Templado / Fiesta"
+      },
+      "outfits_generados": 3,
+      "disponibilidad_valida": true,
+      "latencia_s": 2.6796069145202637,
+      "outfits": [
+        {
+          "nombre": "Estilo 'Rockstar Glam' para Fiesta",
+          "prendas_ids": [
+            "6aa4b56253364dbdb054e187",
+            "6aa4b88253364dbdb054e1a9",
+            "6aa4b5e253364dbdb054e18c"
+          ],
+          "prendas_nombres": [
+            "Falda Lápiz Negra de Cuero Sintético con Cremallera Frontal",
+            "Botas Negras de Tacón Grueso con Cordones y Detalles Dorados",
+            "Camiseta Roja Estampada Deportiva 'Red Machine'"
+          ],
+          "disponibles": true,
+          "justificacion": "¡Este look es perfecto para una fiesta! La falda de cuero sintético con la camiseta roja estampada crea una combinación atrevida y divertida. Las botas con tachuelas le dan el toque final para verte fabulosa y lista para bailar."
+        },
+        {
+          "nombre": "Chic Urbano de Fiesta",
+          "prendas_ids": [
+            "6aa4b56253364dbdb054e187",
+            "6aa4b7d953364dbdb054e1a1",
+            "6aa4b75553364dbdb054e19b"
+          ],
+          "prendas_nombres": [
+            "Falda Lápiz Negra de Cuero Sintético con Cremallera Frontal",
+            "Zapatos Oxford Negros con Tachuelas",
+            "Camiseta Básica Gris con Estampado de Pug"
+          ],
+          "disponibles": true,
+          "justificacion": "Para un estilo más urbano pero igual de chic en tu fiesta, la falda de cuero se ve genial con esa camiseta gris y su divertido estampado. Los zapatos negros con tachuelas le dan un toque moderno y cómodo para toda la noche."
+        },
+        {
+          "nombre": "Vibras Frescas y Coloridas para Fiesta",
+          "prendas_ids": [
+            "6aa4b76953364dbdb054e19c",
+            "6aa4b78053364dbdb054e19d",
+            "6aa4b43e53364dbdb054e186"
+          ],
+          "prendas_nombres": [
+            "Falda Corta Estampada Multicor con Cintura Burdeos",
+            "Zapatos Formales Beige con Tacón Calado Floral",
+            "Camiseta Blanca con Bordado Floral"
+          ],
+          "disponibles": true,
+          "justificacion": "¡Qué linda combinación para tu fiesta! La falda estampada con la cintura burdeos resalta un montón con la camiseta blanca de bordado floral. Y esos zapatos beige de tacón calado le dan un aire súper femenino y festivo."
+        }
+      ]
+    },
+    {
+      "escenario": "Templado Lluvia / Trabajo",
+      "parametros": {
+        "temperatura": 20,
+        "lluvia": true,
+        "ocasion": "Trabajo",
+        "label": "Templado Lluvia / Trabajo"
+      },
+      "outfits_generados": 1,
+      "disponibilidad_valida": true,
+      "latencia_s": 1.8268988132476807,
+      "outfits": [
+        {
+          "nombre": "Estilo Funcional con Toque Clásico",
+          "prendas_ids": [
+            "6aa4b6a553364dbdb054e193",
+            "6aa4b82253364dbdb054e1a4",
+            "6aa4b7d953364dbdb054e1a1",
+            "6aa4b67c53364dbdb054e192"
+          ],
+          "prendas_nombres": [
+            "Suéter de Cuello Alto Beige de Lana Trenzada",
+            "Pantalón Chino Beige Slim Fit",
+            "Zapatos Oxford Negros con Tachuelas",
+            "Chamarra Acolchada Beige de Cuello Alto"
+          ],
+          "disponibles": true,
+          "justificacion": "Este look es perfecto para el trabajo. El suéter y el pantalón chino se ven muy elegantes, y la chamarra acolchada te mantendrá calentita y seca de la lluvia. ¡Además, los zapatos oxford completan un estilo súper chic!"
+        }
+      ]
+    },
+    {
+      "escenario": "Cálido / Trabajo",
+      "parametros": {
+        "temperatura": 22,
+        "lluvia": false,
+        "ocasion": "Trabajo",
+        "label": "Cálido / Trabajo"
+      },
+      "outfits_generados": 3,
+      "disponibilidad_valida": true,
+      "latencia_s": 2.8294260501861572,
+      "outfits": [
+        {
+          "nombre": "Estilo de Oficina Cómodo y Chic",
+          "prendas_ids": [
+            "6aa4b6a553364dbdb054e193",
+            "6aa4b82253364dbdb054e1a4",
+            "6aa4b7d953364dbdb054e1a1"
+          ],
+          "prendas_nombres": [
+            "Suéter de Cuello Alto Beige de Lana Trenzada",
+            "Pantalón Chino Beige Slim Fit",
+            "Zapatos Oxford Negros con Tachuelas"
+          ],
+          "disponibles": true,
+          "justificacion": "Este look combina el suéter beige que es súper calentito y elegante con un pantalón chino, que siempre se ve bien. Los zapatos negros le dan un toque formal y cómodo para el trabajo."
+        },
+        {
+          "nombre": "Profesional y a la Moda",
+          "prendas_ids": [
+            "6aa4b67c53364dbdb054e192",
+            "6aa4b56253364dbdb054e187",
+            "6aa4b7d953364dbdb054e1a1"
+          ],
+          "prendas_nombres": [
+            "Chamarra Acolchada Beige de Cuello Alto",
+            "Falda Lápiz Negra de Cuero Sintético con Cremallera Frontal",
+            "Zapatos Oxford Negros con Tachuelas"
+          ],
+          "disponibles": true,
+          "justificacion": "La chamarra beige es perfecta para un toque sofisticado y la falda lápiz negra es un clásico que nunca falla. Los zapatos oxford son ideales para estar cómoda y con estilo en la oficina."
+        },
+        {
+          "nombre": "Casual Inteligente para el Trabajo",
+          "prendas_ids": [
+            "6aa4b6a553364dbdb054e193",
+            "6aa4b56253364dbdb054e187",
+            "6aa4b7d953364dbdb054e1a1"
+          ],
+          "prendas_nombres": [
+            "Suéter de Cuello Alto Beige de Lana Trenzada",
+            "Falda Lápiz Negra de Cuero Sintético con Cremallera Frontal",
+            "Zapatos Oxford Negros con Tachuelas"
+          ],
+          "disponibles": true,
+          "justificacion": "Me encanta cómo el suéter de lana le da calidez y elegancia a la falda de cuero. Los zapatos negros le dan un cierre perfecto al outfit, ¡estarás lista para todo!"
+        }
+      ]
+    },
+    {
+      "escenario": "Cálido / Social",
+      "parametros": {
+        "temperatura": 25,
+        "lluvia": false,
+        "ocasion": "Social",
+        "label": "Cálido / Social"
+      },
+      "outfits_generados": 3,
+      "disponibilidad_valida": true,
+      "latencia_s": 2.8846471309661865,
+      "outfits": [
+        {
+          "nombre": "Estilo Casual Relajado",
+          "prendas_ids": [
+            "6aa4b85d53364dbdb054e1a7",
+            "6aa4b87053364dbdb054e1a8",
+            "6aa4b5cd53364dbdb054e18b"
+          ],
+          "prendas_nombres": [
+            "Camiseta Manga Larga Azul Marino con Estampado Blanco",
+            "Jeans Claros Desgastados",
+            "Sneakers de Cuero Negro con Suela Blanca"
+          ],
+          "disponibles": true,
+          "justificacion": "Esta combinación es súper cómoda y chic para salir. Los jeans claros con la camiseta azul y las sneakers negras quedan perfectos para un look relajado. ¡Te verás genial!"
+        },
+        {
+          "nombre": "Chic Urbano con Toque Floral",
+          "prendas_ids": [
+            "6aa4b43e53364dbdb054e186",
+            "6aa4b56253364dbdb054e187",
+            "6aa4b5cd53364dbdb054e18b"
+          ],
+          "prendas_nombres": [
+            "Camiseta Blanca con Bordado Floral",
+            "Falda Lápiz Negra de Cuero Sintético con Cremallera Frontal",
+            "Sneakers de Cuero Negro con Suela Blanca"
+          ],
+          "disponibles": true,
+          "justificacion": "¡Este outfit es ideal para un evento social! La falda lápiz negra con la camiseta de flores le da un toque elegante pero divertido, y las sneakers negras lo hacen moderno y cómodo. ¡Me encanta!"
+        },
+        {
+          "nombre": "Look Deportivo Cool",
+          "prendas_ids": [
+            "6aa4b5e253364dbdb054e18c",
+            "6aa4b5f153364dbdb054e18d",
+            "6aa4b6cb53364dbdb054e195"
+          ],
+          "prendas_nombres": [
+            "Camiseta Roja Estampada Deportiva 'Red Machine'",
+            "Pantalón Jogger Azul Marino con Rayas Laterales y Estampado 'KING'",
+            "Sneakers Puma Azules con detalles Rosas"
+          ],
+          "disponibles": true,
+          "justificacion": "Si buscas algo deportivo pero con mucho estilo, este es tu look. El jogger azul con la camiseta roja y los sneakers Puma azules hacen un conjunto súper cool y cómodo. ¡Perfecto para un día activo!"
+        }
+      ]
+    },
+    {
+      "escenario": "Caluroso / Fiesta",
+      "parametros": {
+        "temperatura": 28,
+        "lluvia": false,
+        "ocasion": "Fiesta",
+        "label": "Caluroso / Fiesta"
+      },
+      "outfits_generados": 3,
+      "disponibilidad_valida": true,
+      "latencia_s": 2.80765700340271,
+      "outfits": [
+        {
+          "nombre": "Estilo 'Noche de Fiesta'",
+          "prendas_ids": [
+            "6aa4b56253364dbdb054e187",
+            "6aa4b62553364dbdb054e190",
+            "6aa4b88253364dbdb054e1a9"
+          ],
+          "prendas_nombres": [
+            "Falda Lápiz Negra de Cuero Sintético con Cremallera Frontal",
+            "Suéter de Rayas Rosa y Azul Marino",
+            "Botas Negras de Tacón Grueso con Cordones y Detalles Dorados"
+          ],
+          "disponibles": true,
+          "justificacion": "La falda de cuero se ve súper elegante y el suéter a rayas le da un toque diferente y chic. Las botas negras con detalles dorados complementan perfecto para una noche de fiesta."
+        },
+        {
+          "nombre": "Casual Chic para Fiesta",
+          "prendas_ids": [
+            "6aa4b76953364dbdb054e19c",
+            "6aa4b62553364dbdb054e190",
+            "6aa4b5cd53364dbdb054e18b"
+          ],
+          "prendas_nombres": [
+            "Falda Corta Estampada Multicor con Cintura Burdeos",
+            "Suéter de Rayas Rosa y Azul Marino",
+            "Sneakers de Cuero Negro con Suela Blanca"
+          ],
+          "disponibles": true,
+          "justificacion": "Esta falda estampada con el suéter a rayas se ve divertida y la combinación de colores es muy armónica. Los sneakers negros completan un look casual pero arreglado para la fiesta."
+        },
+        {
+          "nombre": "Fiesta con un toque romántico",
+          "prendas_ids": [
+            "6aa4b56253364dbdb054e187",
+            "6aa4b6a553364dbdb054e193",
+            "6aa4b78053364dbdb054e19d"
+          ],
+          "prendas_nombres": [
+            "Falda Lápiz Negra de Cuero Sintético con Cremallera Frontal",
+            "Suéter de Cuello Alto Beige de Lana Trenzada",
+            "Zapatos Formales Beige con Tacón Calado Floral"
+          ],
+          "disponibles": true,
+          "justificacion": "La falda de cuero y el suéter beige de lana crean un contraste muy bonito. Los zapatos con tacón calado floral son el detalle perfecto para un toque romántico y festivo."
+        }
+      ]
+    },
+    {
+      "escenario": "Calor Extremo / Hogar",
+      "parametros": {
+        "temperatura": 30,
+        "lluvia": false,
+        "ocasion": "Hogar",
+        "label": "Calor Extremo / Hogar"
+      },
+      "outfits_generados": 3,
+      "disponibilidad_valida": true,
+      "latencia_s": 3.2513678073883057,
+      "outfits": [
+        {
+          "nombre": "Confort Casual en Casa",
+          "prendas_ids": [
+            "6aa4b75553364dbdb054e19b",
+            "6aa4b5ac53364dbdb054e18a",
+            "6aa4b5cd53364dbdb054e18b"
+          ],
+          "prendas_nombres": [
+            "Camiseta Básica Gris con Estampado de Pug",
+            "Jeans Clásicos Azul Marino para Niño",
+            "Sneakers de Cuero Negro con Suela Blanca"
+          ],
+          "disponibles": true,
+          "justificacion": "¡Este look es súper cómodo para estar en casa! La camiseta gris con el pug es adorable, y los jeans con los sneakers negros son la combinación perfecta para sentirte a gusto todo el día."
+        },
+        {
+          "nombre": "Relajado y Adorable",
+          "prendas_ids": [
+            "6aa4b62553364dbdb054e190",
+            "6aa4b5ac53364dbdb054e18a",
+            "6aa4b57553364dbdb054e188"
+          ],
+          "prendas_nombres": [
+            "Suéter de Rayas Rosa y Azul Marino",
+            "Jeans Clásicos Azul Marino para Niño",
+            "Zapatillas Tejidas Amarillas con Diseño de Monstruo"
+          ],
+          "disponibles": true,
+          "justificacion": "Este outfit es una opción divertida y relajada. El suéter de rayas le da un toque diferente, y con los jeans y esas zapatillas amarillas tan monas, ¡estarás súper alegre en casa!"
+        },
+        {
+          "nombre": "Sporty Chic para el Sofá",
+          "prendas_ids": [
+            "6aa4b6f653364dbdb054e197",
+            "6aa4b5f153364dbdb054e18d",
+            "6aa4b6cb53364dbdb054e195"
+          ],
+          "prendas_nombres": [
+            "Sudadera Nike Gris con Capucha y Logo Grande",
+            "Pantalón Jogger Azul Marino con Rayas Laterales y Estampado 'KING'",
+            "Sneakers Puma Azules con detalles Rosas"
+          ],
+          "disponibles": true,
+          "justificacion": "Si te apetece algo deportivo pero con estilo, este look es ideal. La sudadera gris con el jogger azul son lo más cómodo, y los sneakers le dan un toque chic para cualquier actividad en casa."
+        }
+      ]
+    },
+    {
+      "escenario": "Calor Extremo / Social",
+      "parametros": {
+        "temperatura": 32,
+        "lluvia": false,
+        "ocasion": "Social",
+        "label": "Calor Extremo / Social"
+      },
+      "outfits_generados": 3,
+      "disponibilidad_valida": true,
+      "latencia_s": 2.8182928562164307,
+      "outfits": [
+        {
+          "nombre": "Estilo Casual Social con Jeans",
+          "prendas_ids": [
+            "6aa4b87053364dbdb054e1a8",
+            "6aa4b5e253364dbdb054e18c",
+            "6aa4b5cd53364dbdb054e18b"
+          ],
+          "prendas_nombres": [
+            "Jeans Claros Desgastados",
+            "Camiseta Roja Estampada Deportiva 'Red Machine'",
+            "Sneakers de Cuero Negro con Suela Blanca"
+          ],
+          "disponibles": true,
+          "justificacion": "¡Este look es súper cómodo y canchero para salir! La camiseta roja le da un toque divertido a los jeans, y los sneakers negros son perfectos para caminar con estilo."
+        },
+        {
+          "nombre": "Casual Social con Falda y Zapatillas",
+          "prendas_ids": [
+            "6aa4b76953364dbdb054e19c",
+            "6aa4b75553364dbdb054e19b",
+            "6aa4b64a53364dbdb054e191"
+          ],
+          "prendas_nombres": [
+            "Falda Corta Estampada Multicor con Cintura Burdeos",
+            "Camiseta Básica Gris con Estampado de Pug",
+            "Sneakers Metalizados Gris Oscuro"
+          ],
+          "disponibles": true,
+          "justificacion": "Esta falda estampada es una monada y combina muy bien con la camiseta gris. Las zapatillas grises le dan un toque moderno y casual al outfit, ¡ideal para un plan relax!"
+        },
+        {
+          "nombre": "Chic y Cómodo para un Día Social",
+          "prendas_ids": [
+            "6aa4b56253364dbdb054e187",
+            "6aa4b62553364dbdb054e190",
+            "6aa4b7d953364dbdb054e1a1"
+          ],
+          "prendas_nombres": [
+            "Falda Lápiz Negra de Cuero Sintético con Cremallera Frontal",
+            "Suéter de Rayas Rosa y Azul Marino",
+            "Zapatos Oxford Negros con Tachuelas"
+          ],
+          "disponibles": true,
+          "justificacion": "La falda de cuero negra se ve súper chic con el suéter de rayas, que le da un toque divertido. Los zapatos Oxford negros completan el look con mucha personalidad, ¡estarás fabulosa!"
+        }
+      ]
+    }
+  ]
+}

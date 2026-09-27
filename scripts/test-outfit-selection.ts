@@ -37,7 +37,6 @@ async function testOutfitSelection() {
         subcategoria: 'Camisa',
         colores: ['Blanco'],
         estilo: 'Casual',
-        talla: 'M',
         estaciones: ['Primavera']
       }
     });
@@ -52,7 +51,6 @@ async function testOutfitSelection() {
         subcategoria: 'Jeans',
         colores: ['Azul'],
         estilo: 'Casual',
-        talla: '32',
         estaciones: ['Primavera']
       }
     });

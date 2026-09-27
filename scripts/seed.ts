@@ -14,7 +14,6 @@ const prendasDePrueba = [
       colores: ['Negro'],
       estaciones: ['Otoño', 'Invierno'],
       estilo: ['Streetwear', 'Casual'],
-      talla: 'L',
       notas: 'Algodón pesado, lavar al revés para cuidar el color.'
     }
   },
@@ -28,7 +27,6 @@ const prendasDePrueba = [
       colores: ['Blanco'],
       estaciones: ['Primavera', 'Verano', 'Todo el año'],
       estilo: ['Casual', 'Streetwear'],
-      talla: 'M',
       notas: 'Corte regular, básica para capas.'
     }
   },
@@ -42,7 +40,6 @@ const prendasDePrueba = [
       colores: ['Azul Claro'],
       estaciones: ['Primavera', 'Otoño', 'Todo el año'],
       estilo: ['Casual', 'Streetwear'],
-      talla: '32',
       notas: 'Mezclilla rígida sin elastano.'
     }
   },
@@ -56,7 +53,6 @@ const prendasDePrueba = [
       colores: ['Verde Oliva'],
       estaciones: ['Otoño', 'Invierno'],
       estilo: ['Streetwear', 'Deportivo'],
-      talla: '30',
       notas: 'Bolsillos laterales espaciosos.'
     }
   },
@@ -70,7 +66,6 @@ const prendasDePrueba = [
       colores: ['Blanco', 'Gris'],
       estaciones: ['Todo el año'],
       estilo: ['Casual', 'Streetwear', 'Deportivo'],
-      talla: '42',
       notas: 'Limpiar suela después de usar en días lluviosos.'
     }
   },
@@ -84,7 +79,6 @@ const prendasDePrueba = [
       colores: ['Negro'],
       estaciones: ['Otoño', 'Invierno'],
       estilo: ['Streetwear', 'Casual', 'Fiesta'],
-      talla: 'M',
       notas: 'Cuero genuino, no exponer al agua directa.'
     }
   },
@@ -98,7 +92,6 @@ const prendasDePrueba = [
       colores: ['Beige'],
       estaciones: ['Primavera', 'Verano'],
       estilo: ['Formal', 'Casual', 'Oficina'],
-      talla: '32',
       notas: 'Tela delgada y elástica.'
     }
   },
@@ -112,7 +105,6 @@ const prendasDePrueba = [
       colores: ['Azul Marino'],
       estaciones: ['Todo el año'],
       estilo: ['Formal', 'Oficina'],
-      talla: 'M',
       notas: 'Requiere planchado a vapor.'
     }
   },
@@ -126,7 +118,6 @@ const prendasDePrueba = [
       colores: ['Café'],
       estaciones: ['Otoño', 'Invierno'],
       estilo: ['Formal', 'Casual'],
-      talla: '43',
       notas: 'Hidratar la piel cada tres meses.'
     }
   },
@@ -140,7 +131,6 @@ const prendasDePrueba = [
       colores: ['Negro'],
       estaciones: ['Verano'],
       estilo: ['Deportivo'],
-      talla: 'M',
       notas: 'Material transpirable, secado rápido.'
     }
   },
@@ -154,7 +144,6 @@ const prendasDePrueba = [
       colores: ['Burdeos'],
       estaciones: ['Otoño', 'Invierno'],
       estilo: ['Casual', 'Formal', 'Oficina'],
-      talla: 'L',
       notas: 'Lavar únicamente a mano con agua fría.'
     }
   },
@@ -168,7 +157,6 @@ const prendasDePrueba = [
       colores: ['Rojo'],
       estaciones: ['Primavera', 'Verano'],
       estilo: ['Formal', 'Fiesta'],
-      talla: 'S',
       notas: 'Vestido de fiesta elegante.'
     }
   },
@@ -182,7 +170,6 @@ const prendasDePrueba = [
       colores: ['Gris'],
       estaciones: ['Otoño', 'Invierno', 'Todo el año'],
       estilo: ['Casual', 'Deportivo', 'Streetwear'],
-      talla: 'M',
       notas: 'Algodón frisado súper cómodo.'
     }
   },
@@ -196,7 +183,6 @@ const prendasDePrueba = [
       colores: ['Negro'],
       estaciones: ['Primavera', 'Verano', 'Todo el año'],
       estilo: ['Casual', 'Streetwear', 'Deportivo'],
-      talla: 'Ajustable',
       notas: 'Visera curva clásica.'
     }
   },
@@ -210,7 +196,6 @@ const prendasDePrueba = [
       colores: ['Azul Marino'],
       estaciones: ['Primavera', 'Otoño'],
       estilo: ['Casual', 'Streetwear'],
-      talla: 'M',
       notas: 'Estilo vintage clásico.'
     }
   },
@@ -224,7 +209,6 @@ const prendasDePrueba = [
       colores: ['Gris'],
       estaciones: ['Invierno'],
       estilo: ['Casual', 'Formal'],
-      talla: 'Única',
       notas: 'Lana acrílica suave.'
     }
   },
@@ -238,7 +222,6 @@ const prendasDePrueba = [
       colores: ['Negro'],
       estaciones: ['Todo el año'],
       estilo: ['Formal', 'Oficina', 'Casual'],
-      talla: '34',
       notas: 'Hebilla plateada satinada.'
     }
   },
@@ -252,7 +235,6 @@ const prendasDePrueba = [
       colores: ['Beige'],
       estaciones: ['Verano'],
       estilo: ['Casual'],
-      talla: '41',
       notas: 'Suela de corcho anatómica.'
     }
   },
@@ -266,7 +248,6 @@ const prendasDePrueba = [
       colores: ['Negro'],
       estaciones: ['Primavera', 'Verano', 'Todo el año'],
       estilo: ['Streetwear', 'Casual', 'Fiesta'],
-      talla: 'Única',
       notas: 'Protección UV400.'
     }
   },
@@ -280,7 +261,6 @@ const prendasDePrueba = [
       colores: ['Gris'],
       estaciones: ['Todo el año'],
       estilo: ['Casual', 'Deportivo', 'Oficina'],
-      talla: '20L',
       notas: 'Compartimento acolchado para laptop de 15 pulgadas.'
     }
   }
