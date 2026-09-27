@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { selectOutfitAction } from '@/lib/actions/outfit';
 import { Button } from '@/components/ui/button';
 import { 
   ArrowLeft, 
@@ -14,7 +16,10 @@ import {
   Volume2, 
   AlertTriangle,
   Send,
-  HelpCircle
+  HelpCircle,
+  ChevronLeft,
+  ChevronRight,
+  X
 } from 'lucide-react';
 import { BottomNav } from '@/components/social/BottomNav';
 
@@ -39,6 +44,52 @@ export default function RecomendacionHoyPage() {
   const [aiResponse, setAiResponse] = useState<string | null>(null);
   const [outfits, setOutfits] = useState<any[]>([]);
   const [lluviaActive, setLluviaActive] = useState(false);
+  
+  // Estados para Carrusel de Outfits e interacción (HU14)
+  const [todasLasPrendas, setTodasLasPrendas] = useState<any[]>([]);
+  const [activeOutfitIndex, setActiveOutfitIndex] = useState(0);
+  const [showCarousel, setShowCarousel] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
+  // Cargar prendas al inicio para poder mapear sus nombres y fotos por ID en el Carrusel
+  useEffect(() => {
+    fetch('/api/prendas?limit=300')
+      .then(res => res.json())
+      .then(data => {
+        setTodasLasPrendas(data.data || []);
+      })
+      .catch(err => {
+        console.error('Error precargando prendas:', err);
+      });
+  }, []);
+
+  // Navegación por teclado (Flechas Izquierda / Derecha) para el carrusel de outfits (HU14)
+  useEffect(() => {
+    if (!showCarousel || outfits.length === 0) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowRight') {
+        setActiveOutfitIndex(prev => {
+          const nextIdx = (prev + 1) % outfits.length;
+          setAccessibilityStatus(`Mostrando outfit ${nextIdx + 1} de ${outfits.length}: ${outfits[nextIdx].nombre}`);
+          return nextIdx;
+        });
+      } else if (e.key === 'ArrowLeft') {
+        setActiveOutfitIndex(prev => {
+          const nextIdx = (prev - 1 + outfits.length) % outfits.length;
+          setAccessibilityStatus(`Mostrando outfit ${nextIdx + 1} de ${outfits.length}: ${outfits[nextIdx].nombre}`);
+          return nextIdx;
+        });
+      } else if (e.key === 'Escape') {
+        setShowCarousel(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [showCarousel, outfits, activeOutfitIndex]);
 
   // Web Speech API - Compatibilidad
   const [speechSupported, setSpeechSupported] = useState(true);
@@ -262,10 +313,12 @@ export default function RecomendacionHoyPage() {
 
       // Concatenar las justificaciones para que el TTS las lea en voz alta (Escenario 2)
       if (generatedOutfits.length > 0) {
+        setShowCarousel(true);
+        setActiveOutfitIndex(0);
         const textToSpeak = generatedOutfits.map((o: any, idx: number) => `Opción ${idx + 1}: ${o.nombre}. ${o.justificacionEstilo}`).join(' ');
         setAiResponse(textToSpeak);
         setStatusMessage('Recomendación de vestidor completada.');
-        setAccessibilityStatus('Recomendación generada. Iniciando lectura en voz alta.');
+        setAccessibilityStatus('Recomendaciones generadas. Abriendo Carrusel interactivo y leyendo sugerencias.');
         
         // Disparar Text-to-Speech (Escenario 2)
         speakText(textToSpeak);
@@ -460,6 +513,178 @@ export default function RecomendacionHoyPage() {
             <div className="border-[3px] border-[#FF0000] p-4 text-[#FF0000] bg-white font-mono text-xs uppercase flex items-center gap-2">
               <AlertTriangle className="size-5 shrink-0" />
               <span>{speechError}</span>
+            </div>
+          )}
+          
+          {/* Carrusel de Outfits a Pantalla Completa (HU14) */}
+          {showCarousel && outfits.length > 0 && (
+            <div 
+              className="fixed inset-0 bg-black/95 z-50 flex flex-col justify-between p-4 sm:p-8 animate-in fade-in duration-200"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Carrusel de outfits recomendados a pantalla completa"
+            >
+              {/* Header del Carrusel */}
+              <div className="flex justify-between items-center border-b-4 border-white pb-4 text-white">
+                <div className="flex flex-col">
+                  <span className="font-heading text-lg sm:text-xl uppercase tracking-wider text-[#FFFF00]">
+                    {outfits[activeOutfitIndex].nombre}
+                  </span>
+                  <span className="font-mono text-xs uppercase text-gray-400">
+                    Propuesta {activeOutfitIndex + 1} de {outfits.length}
+                  </span>
+                </div>
+                <button
+                  onClick={() => setShowCarousel(false)}
+                  className="border-4 border-white bg-white text-black p-2 hover:bg-[#FFFF00] transition-colors shrink-0 cursor-pointer"
+                  aria-label="Cerrar carrusel"
+                >
+                  <X className="size-6" />
+                </button>
+              </div>
+
+              {/* Cuerpo del Carrusel - Tarjeta Principal */}
+              <div className="flex-1 flex flex-col justify-center my-6 max-w-3xl mx-auto w-full">
+                <div className="border-[5px] border-white bg-white p-6 shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] flex flex-col gap-6">
+                  
+                  {/* Contexto y Ocasión */}
+                  <div className="flex justify-between items-center border-b-2 border-black pb-2">
+                    <span className="font-mono text-xs font-bold bg-[#FFFF00] text-black px-2 py-0.5 border border-black uppercase">
+                      Clima: {selectedClima} {lluviaActive ? '🌧️' : '☀️'}
+                    </span>
+                    <span className="font-mono text-xs font-bold bg-black text-white px-2 py-0.5 border border-black uppercase">
+                      Ocasión: {selectedOcasion}
+                    </span>
+                  </div>
+
+                  {/* Justificación de Estilo */}
+                  <div>
+                    <span className="font-heading text-xs uppercase tracking-wider block mb-2 text-black">
+                      Justificación de Estilo:
+                    </span>
+                    <p className="font-mono text-sm leading-relaxed text-black bg-gray-50 p-4 border-[2px] border-black max-h-[140px] overflow-y-auto">
+                      {outfits[activeOutfitIndex].justificacionEstilo}
+                    </p>
+                  </div>
+
+                  {/* Mosaico de Prendas */}
+                  <div>
+                    <span className="font-heading text-xs uppercase tracking-wider block mb-2 text-black">
+                      Prendas del Outfit:
+                    </span>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                      {outfits[activeOutfitIndex].prendas.map((prendaId: string) => {
+                        const prenda = todasLasPrendas.find(p => p._id === prendaId);
+                        if (!prenda) {
+                          return (
+                            <div key={prendaId} className="border-2 border-black p-3 bg-gray-100 flex flex-col items-center justify-center font-mono text-[9px] min-h-[110px] text-black">
+                              [Prenda no encontrada]
+                              <span className="text-[7px] text-gray-500">{prendaId}</span>
+                            </div>
+                          );
+                        }
+                        return (
+                          <Link 
+                            key={prendaId}
+                            href={`/prendas/${prendaId}`}
+                            target="_blank"
+                            className="border-2 border-black p-2 hover:bg-[#FFFF00]/10 transition-colors flex flex-col items-center justify-between min-h-[110px] bg-white group text-black"
+                            title={`Ver detalles de ${prenda.nombre}`}
+                          >
+                            {prenda.imagenUrl ? (
+                              <img 
+                                src={prenda.imagenUrl} 
+                                alt={prenda.nombre} 
+                                className="h-16 w-full object-cover border border-black mb-1.5"
+                              />
+                            ) : (
+                              <div className="h-16 w-full bg-gray-200 border border-black flex items-center justify-center font-mono text-[9px] mb-1.5 uppercase text-black">
+                                Sin Foto
+                              </div>
+                            )}
+                            <div className="text-center w-full">
+                              <span className="font-mono text-[9px] font-bold block truncate uppercase text-black">
+                                {prenda.nombre}
+                              </span>
+                              <span className="font-mono text-[8px] text-gray-500 uppercase block">
+                                {prenda.metadata?.subcategoria || prenda.metadata?.categoria}
+                              </span>
+                            </div>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Botón de Confirmación Principal */}
+                  <button
+                    disabled={isSaving}
+                    onClick={async () => {
+                      setIsSaving(true);
+                      setAccessibilityStatus('Guardando outfit y marcando prendas como sucias...');
+                      
+                      let temp = 22;
+                      if (selectedClima === 'Frío') temp = 8;
+                      else if (selectedClima === 'Fresco') temp = 15;
+                      else if (selectedClima === 'Cálido') temp = 28;
+
+                      const payload = {
+                        prendas: outfits[activeOutfitIndex].prendas,
+                        contexto: {
+                          temperatura: temp,
+                          lluvia: lluviaActive,
+                          ocasion: selectedOcasion
+                        },
+                        justificacionEstilo: outfits[activeOutfitIndex].justificacionEstilo
+                      };
+
+                      const res = await selectOutfitAction(payload);
+                      setIsSaving(false);
+
+                      if (res.success) {
+                        setAccessibilityStatus('Outfit confirmado. Las prendas seleccionadas ahora están sucias.');
+                        alert('¡Outfit confirmado con éxito! Todas las prendas recomendadas han sido enviadas al cesto de ropa sucia.');
+                        router.push('/');
+                      } else {
+                        alert('Error al guardar outfit: ' + res.error);
+                      }
+                    }}
+                    className="w-full bg-[#FFFF00] text-black border-4 border-black font-heading text-sm uppercase py-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all cursor-pointer text-center font-extrabold disabled:opacity-50"
+                  >
+                    {isSaving ? 'Confirmando...' : 'Vestirme con este Outfit'}
+                  </button>
+
+                </div>
+              </div>
+
+              {/* Footer del Carrusel - Controles de Navegación */}
+              <div className="flex justify-between items-center gap-4 text-white">
+                <button
+                  onClick={() => {
+                    setActiveOutfitIndex(prev => (prev - 1 + outfits.length) % outfits.length);
+                    setAccessibilityStatus(`Mostrando outfit ${((activeOutfitIndex - 1 + outfits.length) % outfits.length) + 1} de ${outfits.length}`);
+                  }}
+                  className="border-4 border-white bg-black text-white hover:bg-white hover:text-black p-3 transition-colors flex items-center justify-center cursor-pointer shrink-0"
+                  aria-label="Outfit anterior"
+                >
+                  <ChevronLeft className="size-6" />
+                </button>
+
+                <span className="font-mono text-xs uppercase tracking-widest text-center">
+                  Usa flechas de teclado ⌨️ o desliza
+                </span>
+
+                <button
+                  onClick={() => {
+                    setActiveOutfitIndex(prev => (prev + 1) % outfits.length);
+                    setAccessibilityStatus(`Mostrando outfit ${((activeOutfitIndex + 1) % outfits.length) + 1} de ${outfits.length}`);
+                  }}
+                  className="border-4 border-white bg-black text-white hover:bg-white hover:text-black p-3 transition-colors flex items-center justify-center cursor-pointer shrink-0"
+                  aria-label="Siguiente Outfit"
+                >
+                  <ChevronRight className="size-6" />
+                </button>
+              </div>
             </div>
           )}
 
