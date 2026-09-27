@@ -159,14 +159,9 @@ export default function RecomendacionHoyPage() {
 
       rec.onend = () => {
         setIsConversationActive(false);
-        // Si hay una transcripción válida, procesar recomendación
-        if (transcription.trim().length > 3) {
-          handleFetchRecommendation();
-        } else {
-          setAnimState('LATENCY');
-          setStatusMessage('Conversación de voz pausada.');
-          setAccessibilityStatus('Micrófono desactivado.');
-        }
+        setAnimState('LATENCY');
+        setStatusMessage('Reconocimiento de voz finalizado. Puedes revisar el texto y pedir recomendación.');
+        setAccessibilityStatus('Micrófono desactivado.');
       };
 
       recognitionRef.current = rec;
@@ -175,7 +170,7 @@ export default function RecomendacionHoyPage() {
     return () => {
       stopAudioAndSpeech();
     };
-  }, [transcription]);
+  }, []);
 
   // Analizar palabras clave en tiempo real
   const analyzeKeywords = (text: string) => {
